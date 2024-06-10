@@ -8,6 +8,8 @@ A real-time implementation of Voice Activity Projection (VAP) is aimed at contro
 
 # Data format
 
+# Publication
+
 # Lisence
 The source code in this repository is licensed under the MIT license.
 The trained models, found in the asset directory, are used for only academic purposes.
