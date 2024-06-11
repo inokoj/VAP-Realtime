@@ -41,7 +41,9 @@ $ pip install -r requirements.txt
 
 ## How to use
 
-In this sample, the following audio wav files will be used as input.
+This system can be used in three steps.
+The first step is the main part of the VAP model, while the second and third steps are optional for input and output.
+This implies that you should ideally structure your system like the second and third steps, using them to provide input audio from your sensor and receive the processing result from VAP.
 
 ### Step 1: Launch the main VAP program
 
