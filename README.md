@@ -134,13 +134,13 @@ __Example Data Packet Structure__:
 
 | Byte Offset | Data type | Description |
 | ---- | ---- | --- |
-| 0-7 | Double | Audio data (Individual 1) - Sample 1 |
-| 8-15 | Double | Audio data (Individual 2) - Sample 1 |
-| 16-23 | Double | Audio data (Individual 1) - Sample 2 |
-| 24-31 | Double | Audio data (Individual 2) - Sample 2 |
+| 0 - 7 | Double | Audio data (Individual 1) - Sample 1 |
+| 8 - 15 | Double | Audio data (Individual 2) - Sample 1 |
+| 16 - 23 | Double | Audio data (Individual 1) - Sample 2 |
+| 24 - 31 | Double | Audio data (Individual 2) - Sample 2 |
 | ... | ... | ... |
-| 2544-2551 | Double | Audio data (Individual 1) - Sample 160 |
-| 2552-2559 | Double | Audio data (Individual 2) - Sample 160 |
+| 2544 - 2551 | Double | Audio data (Individual 1) - Sample 160 |
+| 2552 - 2559 | Double | Audio data (Individual 2) - Sample 160 |
 
 For more concrete examples, please see the sample programs like `input/wav.py` and `input/mic.wav`.
 
@@ -154,24 +154,24 @@ Under the specified condition, the size of each output data should be 12,860 byt
 
 | Byte Offset | Data type | Description |
 | --- | --- | --- |
-| 0-3 | Int | Total Data Length (12,860) |
-| 4-11 | Double | Time stamp |
-| 12-15 | Int | Individual 1 Audio Data Length (800) |
-| 16-23 | Double | Audio data (Individual 1) - Sample 1 |
-| 24-31 | Double | Audio data (Individual 1) - Sample 2 |
+| 0 - 3 | Int | Total Data Length (12,860) |
+| 4 - 11 | Double | Time stamp |
+| 12 - 15 | Int | Individual 1 Audio Data Length (800) |
+| 16 - 23 | Double | Audio data (Individual 1) - Sample 1 |
+| 24 - 31 | Double | Audio data (Individual 1) - Sample 2 |
 | ... | ... | ... |
-| 6408-6415 | Double | Audio data (Individual 1) - Sample 800 |
-| 6416-6419 | Int | Individual 2 Audio Data Length (800) |
-| 6420-6427 | Double | Audio data (Individual 2) - Sample 1 |
-| 6428-6435 | Double | Audio data (Individual 2) - Sample 2 |
+| 6408 - 6415 | Double | Audio data (Individual 1) - Sample 800 |
+| 6416 - 6419 | Int | Individual 2 Audio Data Length (800) |
+| 6420 - 6427 | Double | Audio data (Individual 2) - Sample 1 |
+| 6428 - 6435 | Double | Audio data (Individual 2) - Sample 2 |
 | ... | ... | ... |
-| 12812-12819 | Double | Audio data (Individual 2) - Sample 800 |
-| 12820-12823 | Int | P_now length (2) |
-| 12824-12831 | Double | P_now for (Individual 1) |
-| 12832-12839 | Double | P_now for (Individual 2) |
-| 12840-12843 | Int | P_future length (2) |
-| 12844-12851 | Double | P_future for (Individual 1) |
-| 12852-12859 | Double | P_future for (Individual 2) |
+| 12812 - 12819 | Double | Audio data (Individual 2) - Sample 800 |
+| 12820 - 12823 | Int | P_now length (2) |
+| 12824 - 12831 | Double | P_now for (Individual 1) |
+| 12832 - 12839 | Double | P_now for (Individual 2) |
+| 12840 - 12843 | Int | P_future length (2) |
+| 12844 - 12851 | Double | P_future for (Individual 1) |
+| 12852 - 12859 | Double | P_future for (Individual 2) |
 
 <br>
 
@@ -183,9 +183,9 @@ This repository contains several models for VAP and CPC. To use these models, pl
 
 | Type | Location | Description |
 | --- | --- | --- |
-| Japanese VAP | `asset/cpc/vap_state_dict_20hz_jpn.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
-| English VAP | `asset/cpc/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) |
-| Multi-lingual VAP | `asset/cpc/vap_state_dict_20hz_multi_ecj.pt` | Multi-lingual model for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
+| Japanese VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
+| English VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) |
+| Multi-lingual VAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | Multi-lingual model for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
 
 ### CPC
 
