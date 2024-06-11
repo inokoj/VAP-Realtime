@@ -1,17 +1,17 @@
 # For VAP main
-torch
-numpy
-einops
+torch==2.2.0
+numpy==1.23.5
+einops==0.7.0
 
 # If you want to use GPUs for the VAP processing, please install the GPU version of torch
 # See https://pytorch.org/get-started/locally/
 
 # For Input
-soundfile
-pygame
-pydub
-pyaudio
+soundfile==0.12.1
+pygame==2.0.1
+pydub==0.25.1
+pyaudio==0.2.11
 
 # For Output
-matplotlib
-seaborn
+matplotlib==3.7.5
+seaborn==0.13.2
