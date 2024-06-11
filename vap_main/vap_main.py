@@ -479,8 +479,6 @@ def proc_serv_out_dist(list_socket_out, vap):
         sent_size = len(data_sent)
         data_sent_all = sent_size.to_bytes(4, 'little') + data_sent
         
-        print(len(data_sent_all))
-        
         for conn in list_socket_out:
             try:
                 if conn.fileno() != -1:

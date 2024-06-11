@@ -1,0 +1,17 @@
+# For VAP main
+torch
+numpy
+einops
+
+# If you want to use GPUs for the VAP processing, please install the GPU version of torch
+# See https://pytorch.org/get-started/locally/
+
+# For Input
+soundfile
+pygame
+pydub
+pyaudio
+
+# For Output
+matplotlib
+seaborn

@@ -124,15 +124,6 @@ def conv_vapresult_2_bytearray(vap_result):
     b = b''
     #print(type(vap_result['t']))
     b += struct.pack('<d', vap_result['t'])
-    #print(len(b))
-    # a = struct.pack('<d', vap_result['t'])
-    
-    # print(struct.unpack('<d', a)[0])
-    star_point = 4
-    a = len(struct.pack('<d', vap_result['t']))
-    print(star_point, star_point + a - 1)
-    star_point += a
-    
     
     b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
     b += conv_floatarray_2_byte(vap_result['x1'])
