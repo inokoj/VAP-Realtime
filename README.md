@@ -16,7 +16,7 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ## Directories
 
-- __vap_main__ - VAP main direcotry
+- __vap_main__ - VAP main directory
 - __input__ - Sample programs for input function
 - __output__ - SAmple programs for output function
 - __asset__ - Model files for VAP and CPC
@@ -64,7 +64,7 @@ Then, you should see the message like
 
 ### Step 2: Launch the INPUT program
 
-To test the WAV audio inputs of the sample data, launch `input/wav.py`. You can specify the input WAV file names. Please note, this sample input program requires both individual audio files as input for the model, and a mixed 2-channel audio data for playback. Note that you also need to specify the server ip and port number for the main VAP program.
+To test the WAV audio inputs of the sample data, launch `input/wav.py`. You can specify the input WAV file names. Please note, this sample input program requires both individual audio files as input for the model, and a mixed 2-channel audio data for playback. Note that you also need to specify the server IP and port number for the main VAP program.
 
 ```bash
 $ cd input
@@ -89,7 +89,7 @@ $ python mic.py ^
 
 ### Step 3: Launch the OUTPUT program
 
-You can obtain the processing result of the VAP program via TCP/IP. The sample program `output/console.py` is designed to demonstrate how to receive data. It will display the received data on the console. Note that you need to specify the server ip and port number for the main VAP program.
+You can obtain the processing result of the VAP program via TCP/IP. The sample program `output/console.py` is designed to demonstrate how to receive data. It will display the received data on the console. Note that you need to specify the server IP and port number for the main VAP program.
 
 ```bash
 $ cd output
@@ -142,11 +142,11 @@ __Example Data Packet Structure__:
 | 2544-2551 | Double | Audio data (Individual 1) - Sample 160 |
 | 2552-2559 | Double | Audio data (Individual 2) - Sample 160 |
 
-For more concrete example, please see the sample programs like `input/wav.py` and `input/mic.wav`.
+For more concrete examples, please see the sample programs like `input/wav.py` and `input/mic.wav`.
 
 ### Output
 
-The output data includes both the input audio data and the VAP outputs (p_now and p_future). Note that the framerate for the VAP processing differs from that of the input audio. For instance, with a 20 Hz model, the length of the VAP audio frame is 800 milliseconds. Also, all data is in little endian.
+The output data includes both the input audio data and the VAP outputs (p_now and p_future). Note that the framerate for the VAP processing differs from that of the input audio. For instance, with a 20 Hz model, the length of the VAP audio frame is 800 milliseconds. Also, all data is in little-endian.
 
 __Example Data Packet Structure__:
 
@@ -197,19 +197,19 @@ This repository contains several models for VAP and CPC. To use these models, pl
 
 ## Publication
 
-Please site the following paper, if you made any publications made with this repository.
+Please cite the following paper, if you made any publications made with this repository.
 
-Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze
-__Real-time and Continuous Turn-taking Prediction Using Voice Activity Projection__
-International Workshop on Spoken Dialogue Systems Technology (IWSDS), 2024
-https://arxiv.org/abs/2401.04868
+Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze<br>
+__Real-time and Continuous Turn-taking Prediction Using Voice Activity Projection__<br>
+International Workshop on Spoken Dialogue Systems Technology (IWSDS), 2024<br>
+https://arxiv.org/abs/2401.04868<br>
 
 If you use the multi-lingual VAP model, please also cite the following paper.
 
-Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze
-__Multilingual Turn-taking Prediction Using Voice Activity Projection__
-Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING), pages 11873-11883, 2024
-https://aclanthology.org/2024.lrec-main.1036/
+Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze<br>
+__Multilingual Turn-taking Prediction Using Voice Activity Projection__<br>
+Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING), pages 11873-11883, 2024<br>
+https://aclanthology.org/2024.lrec-main.1036/<br>
 
 <br>
 
