@@ -8,6 +8,10 @@ In this repository, the VAP model can operate in real-time in a CPC environment.
 
 The VAP program operates as a program that receives input and outputs processing results through a TCP/IP connection. It is expected that your program will connect to the VAP program via TCP/IP, input the audio data, and receive the VAP results.
 
+<be>
+
+__Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
+
 [![Demo video](http://img.youtube.com/vi/-uwB6yl2WtI/0.jpg)](https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ## Directories
