@@ -8,9 +8,9 @@ einops==0.7.0
 
 # For Input
 soundfile==0.12.1
-pygame==2.0.1
+pygame
 pydub==0.25.1
-pyaudio==0.2.11
+pyaudio
 
 # For Output
 matplotlib==3.7.5

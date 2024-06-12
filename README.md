@@ -53,7 +53,7 @@ When launching the main VAP program, specify both the trained VAP model and the 
 $ cd vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/state_dict_20hz.pt ^
+    --vap_model ../asset/vap/vap_state_dict_20hz.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008
@@ -96,7 +96,7 @@ You can obtain the processing result of the VAP program via TCP/IP. The sample p
 ```bash
 $ cd output
 
-$ python consle.py ^
+$ python console.py ^
     --server_ip 127.0.0.1 ^
     --port_num 50008
 ```
