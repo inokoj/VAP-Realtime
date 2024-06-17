@@ -11,6 +11,7 @@ import pyaudio
 import numpy as np
 import os
 import sys
+import time
 sys.path.append(os.pardir)
 import common.util as util
 
@@ -54,13 +55,21 @@ class MicLoaderForVAP:
         
         self.connect_server()
         x2_vap = [0.0] * self.FRAME_SIZE
+        
+        self.is_running = True
 
         while True:
             
-            d = self.stream.read(self.FRAME_SIZE)
-            d = [float(a) for a in np.frombuffer(d, dtype=np.float32)]
-            data_sent = util.conv_2floatarray_2_bytearray(d, x2_vap)
-            self.sock.sendall(data_sent)
+            try:
+                d = self.stream.read(self.FRAME_SIZE)
+                d = [float(a) for a in np.frombuffer(d, dtype=np.float32)]
+                
+                if self.is_running:
+                    data_sent = util.conv_2floatarray_2_bytearray(d, x2_vap)
+                    self.sock.sendall(data_sent)
+            except Exception as e:
+                print(e)
+                continue
             
 def process_server_command(server_ip='127.0.0.1', port_number=50009, loader=None):
     
@@ -75,17 +84,19 @@ def process_server_command(server_ip='127.0.0.1', port_number=50009, loader=None
             print('[COMMAND] Connected by', addr)
             
             while True:
-                command = conn.recv(1).decode('utf-8')
-                
+                command = conn.recv(1).decode('utf-8').strip()
                 if len(command) == 0:
                     break
                 
                 if command == 'p':
                     print('[COMMAND] Pause')
-                    loader.stream.stop_stream
+                    loader.is_running = False
+                    # print(loader.is_running)
+                    # loader.stream.stop_stream()
                 elif command == 'r':
                     print('[COMMAND] Resume')
-                    loader.stream.start_stream()
+                    #loader.stream.start_stream()
+                    loader.is_running = True
                 else:
                     print('[COMMAND] Unknown command')
         except Exception as e:
@@ -109,7 +120,10 @@ if __name__ == '__main__':
 
     # Start to process the client
     command_server_ip = '127.0.0.1'
-    thread_server = threading.Thread(target=process_server_command, args=(command_server_ip, args.command_server_port_num))
+    thread_server = threading.Thread(
+        target=process_server_command,
+        args=(command_server_ip, args.command_server_port_num, loader)
+    )
     thread_server.setDaemon(True)
     thread_server.start()
     

@@ -12,6 +12,10 @@ pygame
 pydub==0.25.1
 pyaudio
 
+# If you are installing this repository in a Linux environment, such as Ubuntu,
+# you may need to install portaudio using the following command:
+# $ sudo apt-get install portaudio19-dev
+
 # For Output
 matplotlib==3.7.5
 seaborn==0.13.2
