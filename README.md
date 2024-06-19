@@ -14,7 +14,7 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 [![Demo video](http://img.youtube.com/vi/-uwB6yl2WtI/0.jpg)](https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
-## Directories
+## Directory
 
 - __vap_main__ - VAP main directory
 - __input__ - Sample programs for input function
@@ -23,6 +23,14 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
   - __vap__ - VAP models
   - __cpc__  - Pre-trained CPC models
 - __common__ - Utility programs for the VAP process, like how to encode and decode data for communication
+  
+<br>
+
+## Environment
+
+- __Windows__ - Not support WSL
+- __Mac__ - Not support `output/gui.py`
+- __Linux__
   
 <br>
 
@@ -53,7 +61,7 @@ When launching the main VAP program, specify both the trained VAP model and the 
 $ cd vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/vap_state_dict_20hz.pt ^
+    --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008
@@ -102,6 +110,7 @@ $ python console.py ^
 ```
 
 We have also prepared another sample to visualize the received data as `output/gui.py`.
+Note that this GUI program does not work in Mac environemtns.
 
 ```bash
 $ cd output
