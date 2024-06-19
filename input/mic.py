@@ -61,7 +61,7 @@ class MicLoaderForVAP:
         while True:
             
             try:
-                d = self.stream.read(self.FRAME_SIZE)
+                d = self.stream.read(self.FRAME_SIZE, exception_on_overflow=False)
                 d = [float(a) for a in np.frombuffer(d, dtype=np.float32)]
                 
                 if self.is_running:
