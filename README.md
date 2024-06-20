@@ -1,10 +1,15 @@
-<center>
+<p align="center">
 <img src="img/logo.jpg" width="600">
+</p>
 
-# Realtime Voice Activity Projection (Realtime-VAP)
-
-README: [English](README.md) | [Japanese](README_JP.md)
-</center>
+<h1>
+<p align="center">
+Realtime Voice Activity Projection (Realtime-VAP)
+</p>
+</h1>
+<p align="center">
+README: <a href="README.md">English </a> | <a href="README_JP.md">Japanese (日本語) </a>
+</p>
 
 A real-time implementation of Voice Activity Projection (VAP) is aimed at controlling behaviors of spoken dialogue systems, such as turn-taking. The VAP model takes stereo audio data (from two dialogue participants) as input and outputs future voice activity (p_now and p_future).
 
