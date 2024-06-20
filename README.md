@@ -1,10 +1,13 @@
 # Realtime Voice Activity Projection (Realtime-VAP)
+
+README: [English](README.md) | [Japanese](README_JP.md)
+
 A real-time implementation of Voice Activity Projection (VAP) is aimed at controlling behaviors of spoken dialogue systems, such as turn-taking. The VAP model takes stereo audio data (from two dialogue participants) as input and outputs future voice activity (p_now and p_future).
 
 Details about the VAP model can be found in the following repository:
 https://github.com/ErikEkstedt/VoiceActivityProjection
 
-In this repository, the VAP model can operate in real-time in a CPC environment. Please note that using GPUs can increase the processing speed.
+In this repository, the VAP model can operate in real-time in a CPU environment. Please note that using GPUs can increase the processing speed.
 
 The VAP program operates as a program that receives input and outputs processing results through a TCP/IP connection. It is expected that your program will connect to the VAP program via TCP/IP, input the audio data, and receive the VAP results.
 
@@ -157,7 +160,7 @@ For more concrete examples, please see the sample programs like `input/wav.py` a
 
 ### Output
 
-The output data includes both the input audio data and the VAP outputs (p_now and p_future). Note that the framerate for the VAP processing differs from that of the input audio. For instance, with a 20 Hz model, the length of the VAP audio frame is 800 milliseconds. Also, all data is in little-endian.
+The output data includes both the input audio data and the VAP outputs (p_now and p_future). Note that the framerate for the VAP processing differs from that of the input audio. For instance, with a 20 Hz model, the length of the VAP audio frame is 800 samples. Also, all data is in little-endian.
 
 __Example Data Packet Structure__:
 
@@ -166,7 +169,7 @@ Under the specified condition, the size of each output data should be 12,860 byt
 | Byte Offset | Data type | Description |
 | --- | --- | --- |
 | 0 - 3 | Int | Total Data Length (12,860) |
-| 4 - 11 | Double | Time stamp |
+| 4 - 11 | Double | Unix time stamp |
 | 12 - 15 | Int | Individual 1 Audio Data Length (800) |
 | 16 - 23 | Double | Audio data (Individual 1) - Sample 1 |
 | 24 - 31 | Double | Audio data (Individual 1) - Sample 2 |
@@ -259,5 +262,5 @@ https://aclanthology.org/2024.lrec-main.1036/<br>
 The source code in this repository is licensed under the MIT license.
 The trained models, found in the asset directory, are used for only academic purposes.
 
-A pre-trained CPC model, located at asset/cpc/60k_epoch4-d0f474de.pt, is from the original CPC project and please follow its specific license.
+A pre-trained CPC model, located at `asset/cpc/60k_epoch4-d0f474de.pt`, is from the original CPC project and please follow its specific license.
 Refer to the original repository at https://github.com/facebookresearch/CPC_audio for more details.
