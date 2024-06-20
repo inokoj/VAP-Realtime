@@ -186,6 +186,36 @@ Under the specified condition, the size of each output data should be 12,860 byt
 
 <br>
 
+## Offline (batch) processing
+
+You can also batch process recorded wav files using `vap_main/vap_offline.py`.
+
+```bash
+$ cd vap_main
+
+$ python vap_offline.py ^
+    --vap_model '../asset/vap/vap_state_dict_20hz_jpn.pt' ^
+    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav ^
+    --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav ^
+    --filename_output 'output_offline.txt'
+```
+
+The output data will be saved in `output_offline.txt`, where each line contains the timestamp from the wav file (in seconds) followed by p_now (2 float values) and p_future (2 float values), separated by commas, like this:
+
+```
+time_sec,p_now(0=left),p_now(1=right),p_future(0=left),p_future(1=right)
+0.07,0.29654383659362793,0.7034487724304199,0.3714706599712372,0.6285228729248047
+0.12,0.6943456530570984,0.30564749240875244,0.5658637881278992,0.4341297447681427
+0.17,0.8920691013336182,0.10792573541402817,0.7332779169082642,0.26671621203422546
+0.22,0.8698683977127075,0.13012604415416718,0.6923539042472839,0.3076401650905609
+0.27,0.870344340801239,0.12964950501918793,0.730902373790741,0.26909157633781433
+0.32,0.9062888622283936,0.09370578080415726,0.7462385892868042,0.2537555992603302
+0.37,0.8965250849723816,0.10346963256597519,0.6949127912521362,0.30508118867874146
+0.42,0.9331467151641846,0.06684830039739609,0.7633994221687317,0.2365950644016266
+0.47,0.9440065026283264,0.05598851293325424,0.7653886675834656,0.2346058338880539
+```
+
 ## Model
 
 This repository contains several models for VAP and CPC. To use these models, please abide by the [lisence](#lisence).
