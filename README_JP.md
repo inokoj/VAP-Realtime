@@ -1,6 +1,10 @@
+<center>
+<img src="img/logo.jpg" width="600">
+
 # Realtime Voice Activity Projection (Realtime-VAP)
 
 README: [English](README.md) | [Japanese](README_JP.md)
+</center>
 
 Voice Activity Projection (VAP)のリアルタイム実装は、音声対話システムのターンテイキングなどへの応用を目的としています。VAP モデルは、ステレオ音声データ（対話参加者の 2 人分）を入力とし、直後の発話予測（p_now および p_future）を出力します。
 
