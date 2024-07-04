@@ -1,10 +1,7 @@
 import socket
 import argparse
 
-import os
-import sys
-sys.path.append(os.pardir)
-import common.util as util
+import rvap.common.util as util
 
 def process_client(server_ip='127.0.0.1', port_num=50008):
     

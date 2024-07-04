@@ -28,13 +28,14 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ## Directory
 
-- __vap_main__ - VAP main directory
+- __rvap__
+  - __vap_main__ - VAP main directory
+  - __common__ - Utility programs for the VAP process, like how to encode and decode data for communication
 - __input__ - Sample programs for input function
 - __output__ - SAmple programs for output function
 - __asset__ - Model files for VAP and CPC
   - __vap__ - VAP models
   - __cpc__  - Pre-trained CPC models
-- __common__ - Utility programs for the VAP process, like how to encode and decode data for communication
   
 <br>
 
@@ -55,6 +56,7 @@ You can directory install the libraries using it as
 
 ```bash
 $ pip install -r requirements.txt
+$ pip install -e .
 ```
 
 <br>
@@ -70,7 +72,7 @@ This implies that you should ideally structure your system like the second and t
 When launching the main VAP program, specify both the trained VAP model and the pre-trained CPC model. You can also assign port numbers for input and output.
 
 ```bash
-$ cd vap_main
+$ cd rvap/vap_main
 
 $ python vap_main.py ^
     --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
@@ -200,10 +202,10 @@ Under the specified condition, the size of each output data should be 12,860 byt
 
 ## Offline (batch) processing
 
-You can also batch process recorded wav files using `vap_main/vap_offline.py`.
+You can also batch process recorded wav files using `rvap/vap_main/vap_offline.py`.
 
 ```bash
-$ cd vap_main
+$ cd rvap/vap_main
 
 $ python vap_offline.py ^
     --vap_model '../asset/vap/vap_state_dict_20hz_jpn.pt' ^

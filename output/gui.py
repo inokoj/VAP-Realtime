@@ -13,9 +13,7 @@ import argparse
 import numpy as np
 import socket
 
-import sys, os
-sys.path.append(os.pardir)
-import common.util as util
+import rvap.common.util as util
 
 def key_event(e, server_ip='127.0.0.1', port_num=50009):
     

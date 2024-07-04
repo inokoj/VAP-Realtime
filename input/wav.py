@@ -12,10 +12,7 @@ import socket
 from pydub import AudioSegment
 import threading
 
-import os
-import sys
-sys.path.append(os.pardir)
-import common.util as util
+import rvap.common.util as util
 
 class WavLoaderForVAP:   
     

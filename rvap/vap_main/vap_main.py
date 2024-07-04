@@ -23,10 +23,7 @@ import argparse
 from os import environ
 environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
-from os import pardir
-import sys
-sys.path.append(pardir)
-import common.util as util
+import rvap.common.util as util
 
 torch.backends.cudnn.deterministic = True
 torch.use_deterministic_algorithms(mode=True)

@@ -7,13 +7,9 @@ import argparse
 import socket
 import threading
 import pyaudio
-
 import numpy as np
-import os
-import sys
-import time
-sys.path.append(os.pardir)
-import common.util as util
+
+import rvap.common.util as util
 
 class MicLoaderForVAP:   
     

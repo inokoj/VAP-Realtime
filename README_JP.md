@@ -27,13 +27,14 @@ __デモ動画（YouTube）__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ## ディレクトリ構成
 
-- __vap_main__ - VAPメインディレクトリ
+- __rvap__
+  - __vap_main__ - VAPメインディレクトリ
+  - __common__ - 通信用のデータのエンコードとデコード方法など
 - __input__ - 入力用サンプルプログラム
 - __output__ - 出力用サンプルプログラム
 - __asset__ - VAPおよびCPC用のモデルファイル
   - __vap__ - VAPモデル
   - __cpc__ - 事前学習済みのCPCモデル
-- __common__ - 通信用のデータのエンコードとデコード方法など
   
 <br>
 
@@ -53,6 +54,7 @@ __デモ動画（YouTube）__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ```bash
 $ pip install -r requirements.txt
+$ pip install -e .
 ```
 
 <br>
@@ -66,7 +68,7 @@ $ pip install -r requirements.txt
 VAPプログラムを起動する際には、学習済みVAPモデルとCPCモデルの両方を指定します。入力と出力のTCP/IPのポート番号も指定できます。
 
 ```bash
-$ cd vap_main
+$ cd rvap/vap_main
 
 $ python vap_main.py ^
     --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
@@ -196,10 +198,10 @@ __データフレームの構成__:
 
 ## オフライン (バッチ) 処理
 
-`vap_main/vap_offline.py` を使用して、録音済みの wav ファイルをバッチ処理することもできます。
+`rvap/vap_main/vap_offline.py` を使用して、録音済みの wav ファイルをバッチ処理することもできます。
 
 ```bash
-$ cd vap_main
+$ cd rvap/vap_main
 
 $ python vap_offline.py ^
     --vap_model '../asset/vap/vap_state_dict_20hz_jpn.pt' ^
