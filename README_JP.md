@@ -226,6 +226,12 @@ time_sec,p_now(0=left),p_now(1=right),p_future(0=left),p_future(1=right)
 0.47,0.9440065026283264,0.05598851293325424,0.7653886675834656,0.2346058338880539
 ```
 
+### 可視化
+可視化ツールを使って、オフライン予測結果を音声と共に閲覧することができます。
+```shell
+python output/offline_prediction_visualizer/main.py --left_audio input/wav_sample/jpn_inoue_16k.wav --right_audio input/wav_sample/jpn_sumida_16k.wav  --prediction rvap/vap_main/output_offline.txt
+```
+
 ## モデル
 
 このリポジトリには、VAPとCPCのモデルがいくつか含まれています。これらのモデルを使用する場合は、[ライセンス](#lisence)に従ってください。

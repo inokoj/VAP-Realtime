@@ -19,3 +19,4 @@ pyaudio
 # For Output
 matplotlib==3.7.5
 seaborn==0.13.2
+fastapi==0.111.0
