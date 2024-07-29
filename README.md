@@ -230,6 +230,12 @@ time_sec,p_now(0=left),p_now(1=right),p_future(0=left),p_future(1=right)
 0.47,0.9440065026283264,0.05598851293325424,0.7653886675834656,0.2346058338880539
 ```
 
+### Visualization
+The visualization app can be used to see the prediction result while listening to the audio.
+```shell
+python output/offline_prediction_visualizer/main.py --left_audio input/wav_sample/jpn_inoue_16k.wav --right_audio input/wav_sample/jpn_sumida_16k.wav  --prediction rvap/vap_main/output_offline.txt
+```
+
 ## Model
 
 This repository contains several models for VAP and CPC. To use these models, please abide by the [lisence](#lisence).

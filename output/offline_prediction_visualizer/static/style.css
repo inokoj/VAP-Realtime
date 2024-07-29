@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.waveform-container {
+    width: 100%;
+    position: relative;
+    padding-top: 0px;
+}
+
+.description {
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.waveform-instance {
+    margin: 10px 10px 0 53px;
+    height: 80px;
+}
+
+.probability-chart {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0; 
+    position: relative;
+    width: 100%;
+    top: 10px;
+    z-index: 10;
+}
+
+.button-group button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #007BFF;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-group button:hover {
+    background-color: #0056b3;
+}
+
+.button-group button:active {
+    transform: scale(0.95);
+}
+
+.button-group button:focus {
+    outline: none;
+}
+
+.button-group button i {
+    margin-right: 8px;
+}
