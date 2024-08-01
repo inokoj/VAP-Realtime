@@ -83,7 +83,7 @@ $ python vap_main.py ^
     --port_num_out 50008
 ```
 
-If you want to use a GPU, please add an argument `--gpu`
+If you want to use a GPU, please add an argument `--gpu`.
 
 Then, you should see the message like
 ~~~shell-session
