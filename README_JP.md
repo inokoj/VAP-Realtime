@@ -57,6 +57,8 @@ $ pip install -r requirements.txt
 $ pip install -e .
 ```
 
+GPUを使用したい場合は `requirements-gpu.txt` を用いてください。
+
 <br>
 
 ## 使用方法
@@ -76,6 +78,8 @@ $ python vap_main.py ^
     --port_num_in 50007 ^
     --port_num_out 50008
 ```
+
+GPUを使用したい場合は、オプション `--gpu` を引数に追加してください。
 
 次のようなメッセージが表示されます。
 

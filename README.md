@@ -59,6 +59,8 @@ $ pip install -r requirements.txt
 $ pip install -e .
 ```
 
+If you want to use a GPU, please use `requirements-gpu.txt`
+
 <br>
 
 ## How to use
@@ -80,6 +82,8 @@ $ python vap_main.py ^
     --port_num_in 50007 ^
     --port_num_out 50008
 ```
+
+If you want to use a GPU, please add an argument `--gpu`
 
 Then, you should see the message like
 ~~~shell-session

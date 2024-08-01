@@ -5,3 +5,4 @@ vap_main/output_offline.txt
 /rvap.egg-info
 /rvap/common/__pycache__
 /rvap/vap_main/__pycache__
+all.bat

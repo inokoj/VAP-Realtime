@@ -329,22 +329,22 @@ class VAPRealTime():
             
             self.e1_context.append(e1)
             self.e2_context.append(e2)
-
+            
             if len(self.e1_context) > self.AUDIO_CONTEXT_LIM:
                 self.e1_context = self.e1_context[-self.AUDIO_CONTEXT_LIM:]
             if len(self.e2_context) > self.AUDIO_CONTEXT_LIM:
                 self.e2_context = self.e2_context[-self.AUDIO_CONTEXT_LIM:]
             
-            x1_ = torch.cat(self.e1_context, dim=1)
-            x2_ = torch.cat(self.e2_context, dim=1)
+            x1_ = torch.cat(self.e1_context, dim=1).to(self.device)
+            x2_ = torch.cat(self.e2_context, dim=1).to(self.device)
             
             o1 = self.vap.ar_channel(x1_, attention=False)
             o2 = self.vap.ar_channel(x2_, attention=False)
             out = self.vap.ar(o1["x"], o2["x"], attention=False)
-
+            
             # Outputs
-            logits = self.vap.vap_head(out["x"]).to('cpu')
-            probs = logits.softmax(dim=-1).to('cpu')
+            logits = self.vap.vap_head(out["x"])
+            probs = logits.softmax(dim=-1)
             
             p_now = self.vap.objective.probs_next_speaker_aggregate(
                 probs,
@@ -357,6 +357,10 @@ class VAPRealTime():
                 from_bin=self.BINS_PFUTURE[0],
                 to_bin=self.BINS_PFUTURE[1]
             )
+            
+            # Get back to the CPU
+            p_now = p_now.to('cpu')
+            p_future = p_future.to('cpu')
             
             self.result_p_now = p_now.tolist()[0][-1]
             self.result_p_future = p_future.tolist()[0][-1]
@@ -518,12 +522,11 @@ if __name__ == "__main__":
     #
     # GPU Usage
     #
-    use_gpu = args.gpu
-
     device = torch.device('cpu')
     if args.gpu:
         if torch.cuda.is_available():
             device = torch.device('cuda')
+    print('Device: ', device)
     
     wait_input = True
 
