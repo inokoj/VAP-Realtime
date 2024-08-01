@@ -256,10 +256,12 @@ class VAPRealTime():
     
     CALC_PROCESS_TIME_INTERVAL = 100
         
-    def __init__(self, vap_model, cpc_model):
+    def __init__(self, vap_model, cpc_model, device):
         
         conf = VapConfig()
         self.vap = VapGPT(conf)
+
+        self.device = device
 
         sd = torch.load(vap_model, map_location=torch.device('cpu'))
         self.vap.load_encoder(cpc_model=cpc_model)
@@ -276,6 +278,7 @@ class VAPRealTime():
         self.vap.encoder2.downsample[2].ln.weight = nn.Parameter(sd['encoder.downsample.2.ln.weight'])
         self.vap.encoder2.downsample[2].ln.bias = nn.Parameter(sd['encoder.downsample.2.ln.bias'])
 
+        self.vap.to(self.device)
         self.vap = self.vap.eval()
 
         # Context length of the audio embeddings (depends on frame rate)
@@ -319,8 +322,8 @@ class VAPRealTime():
         
         with torch.no_grad():
             
-            x1_ = torch.tensor([[x1]], dtype=torch.float32)
-            x2_ = torch.tensor([[x2]], dtype=torch.float32)
+            x1_ = torch.tensor([[x1]], dtype=torch.float32, device=self.device)
+            x2_ = torch.tensor([[x2]], dtype=torch.float32, device=self.device)
 
             e1, e2 = self.vap.encode_audio(x1_, x2_)
             
@@ -340,8 +343,8 @@ class VAPRealTime():
             out = self.vap.ar(o1["x"], o2["x"], attention=False)
 
             # Outputs
-            logits = self.vap.vap_head(out["x"])
-            probs = logits.softmax(dim=-1)
+            logits = self.vap.vap_head(out["x"]).to('cpu')
+            probs = logits.softmax(dim=-1).to('cpu')
             
             p_now = self.vap.objective.probs_next_speaker_aggregate(
                 probs,
@@ -495,10 +498,11 @@ if __name__ == "__main__":
     
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_model", type=str, default='../asset/vap/vap_state_dict_20hz_jpn.pt')
-    parser.add_argument("--cpc_model", type=str, default='../asset/cpc/60k_epoch4-d0f474de.pt')
+    parser.add_argument("--vap_model", type=str, default='../../asset/vap/vap_state_dict_20hz_jpn.pt')
+    parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--port_num_in", type=int, default=50007)
     parser.add_argument("--port_num_out", type=int, default=50008)
+    parser.add_argument("--gpu", action='store_true')
     # parser.add_argument("--input_wav_left", type=str, default='wav/101_1_2-left-ope.wav')
     # parser.add_argument("--input_wav_right", type=str, default='wav/101_1_2-right-cus.wav')
     # parser.add_argument("--play_wav_stereo", type=str, default='wav/101_1_2.wav')
@@ -511,9 +515,19 @@ if __name__ == "__main__":
     # result_vad = []
     # result_time_stamp = [0]
     
+    #
+    # GPU Usage
+    #
+    use_gpu = args.gpu
+
+    device = torch.device('cpu')
+    if args.gpu:
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+    
     wait_input = True
 
-    vap = VAPRealTime(args.vap_model, args.cpc_model)
+    vap = VAPRealTime(args.vap_model, args.cpc_model, device)
     
     list_socket_out = []
 
