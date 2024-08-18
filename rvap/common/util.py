@@ -133,7 +133,7 @@ def conv_vapresult_2_bytearray(vap_result):
     
     b += len(vap_result['p_now']).to_bytes(4, BYTE_ORDER)
     b += conv_floatarray_2_byte(vap_result['p_now'])
-    
+
     b += len(vap_result['p_future']).to_bytes(4, BYTE_ORDER)
     b += conv_floatarray_2_byte(vap_result['p_future'])
     
@@ -173,6 +173,67 @@ def conv_bytearray_2_vapresult(barr):
         'x2': x2,
         'p_now': p_now,
         'p_future': p_future
+    }
+    
+    return result_vap
+
+#
+# VAP result -> Byte
+#
+def conv_vapresult_2_bytearray_bc(vap_result):
+    
+    b = b''
+    #print(type(vap_result['t']))
+    b += struct.pack('<d', vap_result['t'])
+    
+    b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x1'])
+    
+    b += len(vap_result['x2']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x2'])
+    
+    b += len(vap_result['p_bc_react']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_bc_react'])
+
+    b += len(vap_result['p_bc_emo']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_bc_emo'])
+    
+    return b
+
+#
+# Byte -> VAP result
+#
+def conv_bytearray_2_vapresult_bc(barr):
+    
+    idx = 0
+    t = struct.unpack('<d', barr[idx:8])[0]
+    idx += 8
+    
+    len_x1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x1])
+    idx += 8*len_x1
+    
+    len_x2 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x2])
+    idx += 8 * len_x2
+    
+    len_p_bc_react = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_bc_react = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_bc_react])
+    idx += 8*len_p_bc_react
+    
+    len_p_bc_emo = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_bc_emo = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_bc_emo])
+
+    result_vap = {
+        't': t,
+        'x1': x1,
+        'x2': x2,
+        'p_bc_react': p_bc_react,
+        'p_bc_emo': p_bc_emo
     }
     
     return result_vap

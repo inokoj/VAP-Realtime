@@ -1,7 +1,7 @@
 import torch.nn as nn
 import einops
 
-from encoder_components import load_CPC, get_cnn_layer
+from rvap.vap_main.encoder_components import load_CPC, get_cnn_layer
 
 class EncoderCPC(nn.Module):
     """

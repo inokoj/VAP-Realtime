@@ -195,12 +195,12 @@ Under the specified condition, the size of each output data should be 12,860 byt
 | 6428 - 6435 | Double | Audio data (Individual 2) - Sample 2 |
 | ... | ... | ... |
 | 12812 - 12819 | Double | Audio data (Individual 2) - Sample 800 |
-| 12820 - 12823 | Int | P_now length (2) |
-| 12824 - 12831 | Double | P_now for (Individual 1) |
-| 12832 - 12839 | Double | P_now for (Individual 2) |
-| 12840 - 12843 | Int | P_future length (2) |
-| 12844 - 12851 | Double | P_future for (Individual 1) |
-| 12852 - 12859 | Double | P_future for (Individual 2) |
+| 12820 - 12823 | Int | p_now length (2) |
+| 12824 - 12831 | Double | p_now for (Individual 1) |
+| 12832 - 12839 | Double | p_now for (Individual 2) |
+| 12840 - 12843 | Int | p_future length (2) |
+| 12844 - 12851 | Double | p_future for (Individual 1) |
+| 12852 - 12859 | Double | p_future for (Individual 2) |
 
 <br>
 
@@ -240,6 +240,28 @@ The visualization app can be used to see the prediction result while listening t
 python output/offline_prediction_visualizer/main.py --left_audio input/wav_sample/jpn_inoue_16k.wav --right_audio input/wav_sample/jpn_sumida_16k.wav  --prediction rvap/vap_main/output_offline.txt
 ```
 
+## Backchannel prediction
+
+There is also a fine-tuned model available for backchannel prediction (generation).
+Please use the following main program:
+
+```bash
+$ cd rvap/vap_bc
+
+$ python vap_bc_main.py ^
+    --vap_model ../asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt ^
+    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --port_num_in 50007 ^
+    --port_num_out 50008
+```
+
+The input/output format is the same, but the output `p_now` and `p_future` are replaced with `p_bc_react` and `p_bc_emo`, respectively.
+`p_bc_react` represents the probability of occurrence of reactive backchannels (e.g., "Yeah"), and `p_bc_emo` represents the probability of occurrence of emotional backchannels (e.g., "Wow").
+This model predicts the probability of backchannels occurring 500 milliseconds later.
+Also, note that while the model input consists of 2-channel audio, it predicts the backchannels of the speaker on the first channel, meaning the second channel corresponds to the user's voice.
+
+The sample programs for visualization are `output/console_bc.py` and `output/gui_bc.py`.
+
 ## Model
 
 This repository contains several models for VAP and CPC. To use these models, please abide by the [lisence](#lisence).
@@ -251,6 +273,12 @@ This repository contains several models for VAP and CPC. To use these models, pl
 | Japanese VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
 | English VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) |
 | Multi-lingual VAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | Multi-lingual model for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) |
+
+### Backchannel prediction VAP
+
+| Type | Location | Description |
+| --- | --- | --- |
+| Japanese backchannel VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | Backchannel prediction model fine-tuned with an attentive listening dialogue data using ERICA (WoZ) |
 
 ### CPC
 

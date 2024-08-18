@@ -191,12 +191,12 @@ __データフレームの構成__:
 | 6428 - 6435 | Double | 音声データ (2人目) - サンプル 2 |
 | ... | ... | ... |
 | 12812 - 12819 | Double | 音声データ (2人目) - サンプル 800 |
-| 12820 - 12823 | Int | P_now のデータ長 (2) |
-| 12824 - 12831 | Double | P_now (1人目) |
-| 12832 - 12839 | Double | P_now (2人目) |
-| 12840 - 12843 | Int | P_future のデータ長 (2) |
-| 12844 - 12851 | Double | P_future (1人目) |
-| 12852 - 12859 | Double | P_future (2人目) |
+| 12820 - 12823 | Int | p_now のデータ長 (2) |
+| 12824 - 12831 | Double | p_now (1人目) |
+| 12832 - 12839 | Double | p_now (2人目) |
+| 12840 - 12843 | Int | p_future のデータ長 (2) |
+| 12844 - 12851 | Double | p_future (1人目) |
+| 12852 - 12859 | Double | p_future (2人目) |
 
 <br>
 
@@ -231,10 +231,33 @@ time_sec,p_now(0=left),p_now(1=right),p_future(0=left),p_future(1=right)
 ```
 
 ### 可視化
+
 可視化ツールを使って、オフライン予測結果を音声と共に閲覧することができます。
 ```shell
 python output/offline_prediction_visualizer/main.py --left_audio input/wav_sample/jpn_inoue_16k.wav --right_audio input/wav_sample/jpn_sumida_16k.wav  --prediction rvap/vap_main/output_offline.txt
 ```
+
+## 相槌予測
+
+相槌予測（生成）用にファインチューニングされたモデルもあります。
+以下のメインプログラムを使用してください。
+
+```bash
+$ cd rvap/vap_bc
+
+$ python vap_bc_main.py ^
+    --vap_model ../asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt ^
+    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --port_num_in 50007 ^
+    --port_num_out 50008
+```
+
+入出力のフォーマットは同じで、出力の`p_now`と`p_future`がそれぞれ`p_bc_react`と`p_bc_emo`に置き換わります。
+`p_bc_react`は応答系（「うん」など）、`p_bc_emo`は感情系（「へー」など）の相槌の生起確率を表します。
+このモデルは500ミリ秒後の相槌の生起確率を予測するものです。
+また、モデルの入力は2チャンネルの音声ですが、1チャンネル目の話者の相槌を予測する、つまり2チャンネル目がユーザの音声に対応することに注意してください。
+
+可視化のサンプルプログラムは`output/console_bc.py`や`output/gui_bc.py`です。
 
 ## モデル
 
@@ -247,6 +270,12 @@ python output/offline_prediction_visualizer/main.py --left_audio input/wav_sampl
 | 日本語VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | [旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話を用いて学習された日本語モデル |
 | 英語VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル |
 | マルチリンガルVAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル |
+
+### 相槌予測VAP
+
+| 種類 | 配置場所 | 説明 |
+| --- | --- | --- |
+| 日本語相槌VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル |
 
 ### CPC
 
