@@ -30,6 +30,7 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 - __rvap__
   - __vap_main__ - VAP main directory
+  - __vap_bc__ - VAP main directory for backchannel prediction
   - __common__ - Utility programs for the VAP process, like how to encode and decode data for communication
 - __input__ - Sample programs for input function
 - __output__ - SAmple programs for output function

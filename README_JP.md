@@ -29,6 +29,7 @@ __デモ動画（YouTube）__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 - __rvap__
   - __vap_main__ - VAPメインディレクトリ
+  - __vap_main__ - 相槌予測用VAPのメインディレクトリ
   - __common__ - 通信用のデータのエンコードとデコード方法など
 - __input__ - 入力用サンプルプログラム
 - __output__ - 出力用サンプルプログラム
