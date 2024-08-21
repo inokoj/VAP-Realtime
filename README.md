@@ -72,7 +72,9 @@ This implies that you should ideally structure your system like the second and t
 
 ### Step 1: Launch the main VAP program
 
-When launching the main VAP program, specify both the trained VAP model and the pre-trained CPC model. You can also assign port numbers for input and output. For the parameters of the model you use, it should be correctly set as `vap_process_rate` and `context_len_sec.` Please check out [the description of the model](#model).
+When launching the main VAP program, specify both the trained VAP model and the pre-trained CPC model. You can also assign port numbers for input and output.
+For the parameters of the model you use, it needs to correctly set `vap_process_rate` and `context_len_sec`.
+Please check out [the description of the model](#model).
 
 ```bash
 $ cd rvap/vap_main
@@ -268,10 +270,13 @@ The sample programs for visualization are `output/console_bc.py` and `output/gui
 ## Model
 
 This repository contains several models for VAP and CPC. To use these models, please abide by the [lisence](#lisence).
+There are parameters named `vap_process_rate` and `context_len_sec`.
+The former specifies the number of samples processed in the VAP model per second, and the second one corresponds to the length (sec.) of the context input to the model.
+They are fixed during the training so if you want to change those parameters, you need to re-train the models.
 
 ### VAP
 
-| Type | Location | Description | 'vap_process_rate` | `context_len_sec` |
+| Type | Location | Description | `vap_process_rate` | `context_len_sec` |
 | --- | --- | --- | --- | --- |
 | Japanese VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 5 |
 | English VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) | 20 | 5 |
@@ -279,7 +284,7 @@ This repository contains several models for VAP and CPC. To use these models, pl
 
 ### Backchannel prediction VAP
 
-| Type | Location | Description | 'vap_process_rate` | `context_len_sec` |
+| Type | Location | Description | `vap_process_rate` | `context_len_sec` |
 | --- | --- | --- | --- | --- |
 | Japanese backchannel VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | Backchannel prediction model fine-tuned with an attentive listening dialogue data using ERICA (WoZ) | 10 | 5 |
 
