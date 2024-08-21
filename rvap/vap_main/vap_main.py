@@ -214,17 +214,17 @@ class VAPRealTime():
         self.vap.to(self.device)
         self.vap = self.vap.eval()
 
-        # Context length of the audio embeddings (depends on frame rate)
-        
-        
         self.audio_contenxt_lim_sec = context_len_sec
         self.frame_rate = frame_rate
+        
+        # Context length of the audio embeddings (depends on frame rate)
         self.audio_context_len = int(self.audio_contenxt_lim_sec * self.frame_rate)
         
         self.sampling_rate = 16000
         self.frame_contxt_padding = 320 # Independe from frame size
         
         # Frame size
+        # 10Hz -> 320 + 1600 samples
         # 20Hz -> 320 + 800 samples
         # 50Hz -> 320 + 320 samples
         self.audio_frame_size = self.sampling_rate // self.frame_rate + self.frame_contxt_padding
@@ -312,7 +312,7 @@ class VAPRealTime():
                 num_process_frame = len(self.list_process_time_context) / (time.time() - self.last_interval_time)
                 self.last_interval_time = time.time()
                 
-                print('[VAP] Average processing time: %.5f [sec], #process/sec: %.1f' % (ave_proc_time, num_process_frame))
+                print('[VAP] Average processing time: %.5f [sec], #process/sec: %.3f' % (ave_proc_time, num_process_frame))
                 self.list_process_time_context = []
             
             self.process_time_abs = time.time()
@@ -336,10 +336,7 @@ def proc_serv_out(list_socket_out, port_number=50008):
 
 def proc_serv_in(port_number, vap):
     
-    
     FRAME_SIZE_INPUT = 160
-    FRAME_SAVE_LAST = 320
-    FRAME_SIZE_VAP = vap.sampling_rate / vap.frame_rate
         
     while True:
         try:

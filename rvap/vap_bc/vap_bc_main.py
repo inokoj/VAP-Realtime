@@ -182,7 +182,7 @@ class VAPRealTime():
     
     CALC_PROCESS_TIME_INTERVAL = 100
         
-    def __init__(self, vap_model, cpc_model, device):
+    def __init__(self, vap_model, cpc_model, device, frame_rate, context_len_sec):
         
         conf = VapConfig()
         self.vap = VapGPT(conf)
@@ -207,11 +207,12 @@ class VAPRealTime():
         self.vap.to(self.device)
         self.vap = self.vap.eval()
 
-        # Context length of the audio embeddings (depends on frame rate)
-        self.AUDIO_CONTEXT_LIM = 50
+        self.audio_contenxt_lim_sec = context_len_sec
+        self.frame_rate = frame_rate
         
-        self.audio_contenxt_lim_sec = 5
-        self.frame_hz = 10
+        # Context length of the audio embeddings (depends on frame rate)
+        self.audio_context_len = int(self.audio_contenxt_lim_sec * self.frame_rate)
+        
         self.sampling_rate = 16000
         self.frame_contxt_padding = 320 # Independe from frame size
         
@@ -219,7 +220,7 @@ class VAPRealTime():
         # 10Hz -> 320 + 1600 samples
         # 20Hz -> 320 + 800 samples
         # 50Hz -> 320 + 320 samples
-        self.audio_frame_size = self.sampling_rate // self.frame_hz + self.frame_contxt_padding
+        self.audio_frame_size = self.sampling_rate // self.frame_rate + self.frame_contxt_padding
         
         self.current_x1_audio = []
         self.current_x2_audio = []
@@ -234,13 +235,9 @@ class VAPRealTime():
         self.e2_context = []
         
         self.list_process_time_context = []
+        self.last_interval_time = time.time()
     
     def process_vap(self, x1, x2):
-        
-        # Frame size
-        # 10Hz -> 320 + 1600 samples
-        # 20Hz -> 320 + 800 samples
-        # 50Hz -> 320 + 320 samples
         
         time_start = time.time()
         
@@ -258,10 +255,10 @@ class VAPRealTime():
             self.e1_context.append(e1)
             self.e2_context.append(e2)
             
-            if len(self.e1_context) > self.AUDIO_CONTEXT_LIM:
-                self.e1_context = self.e1_context[-self.AUDIO_CONTEXT_LIM:]
-            if len(self.e2_context) > self.AUDIO_CONTEXT_LIM:
-                self.e2_context = self.e2_context[-self.AUDIO_CONTEXT_LIM:]
+            if len(self.e1_context) > self.audio_context_len:
+                self.e1_context = self.e1_context[-self.audio_context_len:]
+            if len(self.e2_context) > self.audio_context_len:
+                self.e2_context = self.e2_context[-self.audio_context_len:]
             
             x1_ = torch.cat(self.e1_context, dim=1).to(self.device)
             x2_ = torch.cat(self.e2_context, dim=1).to(self.device)
@@ -271,37 +268,11 @@ class VAPRealTime():
             out = self.vap.ar(o1["x"], o2["x"], attention=False)
 
             # Outputs
-            #v1 = self.va_classifier(out["x1"])
-            #v2 = self.va_classifier(out["x2"])
-            #vad = torch.cat((v1, v2), dim=-1)
             bc_react = self.vap.bc_head_react(out["x"])
             bc_emo = self.vap.bc_head_emo(out["x"])
-            #logits = self.vap_head(out["x"])
 
             p_bc_react = bc_react.sigmoid()
             p_bc_emo = bc_emo.sigmoid()
-
-
-            
-            # o1 = self.vap.ar_channel(x1_, attention=False)
-            # o2 = self.vap.ar_channel(x2_, attention=False)
-            # out = self.vap.ar(o1["x"], o2["x"], attention=False)
-            
-            # # Outputs
-            # logits = self.vap.vap_head(out["x"])
-            # probs = logits.softmax(dim=-1)
-            
-            # p_now = self.vap.objective.probs_next_speaker_aggregate(
-            #     probs,
-            #     from_bin=self.BINS_P_NOW[0],
-            #     to_bin=self.BINS_P_NOW[-1]
-            # )
-            
-            # p_future = self.vap.objective.probs_next_speaker_aggregate(
-            #     probs,
-            #     from_bin=self.BINS_PFUTURE[0],
-            #     to_bin=self.BINS_PFUTURE[1]
-            # )
             
             # Get back to the CPU
             p_bc_react = p_bc_react.to('cpu')
@@ -318,7 +289,10 @@ class VAPRealTime():
             
             if len(self.list_process_time_context) > self.CALC_PROCESS_TIME_INTERVAL:
                 ave_proc_time = np.average(self.list_process_time_context)
-                print('[VAP] Average processing time: %.5f [sec]' % ave_proc_time)
+                num_process_frame = len(self.list_process_time_context) / (time.time() - self.last_interval_time)
+                self.last_interval_time = time.time()
+                
+                print('[VAP] Average processing time: %.5f [sec], #process/sec: %.3f' % (ave_proc_time, num_process_frame))
                 self.list_process_time_context = []
             
             self.process_time_abs = time.time()
@@ -342,15 +316,8 @@ def proc_serv_out(list_socket_out, port_number=50008):
 
 def proc_serv_in(port_number, vap):
     
-    # Frame size
-    # 10Hz -> 320 + 1600 samples
-    # 20Hz -> 320 + 800 samples
-    # 50Hz -> 320 + 320 samples
-
     FRAME_SIZE_INPUT = 160
-    FRAME_SIZE_VAP = 1600
-    FRAME_SAVE_LAST = 320
-    
+        
     while True:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -361,8 +328,8 @@ def proc_serv_in(port_number, vap):
             conn, addr = s.accept()
             print('[IN] Connected by', addr)
             
-            current_x1 = np.zeros(FRAME_SAVE_LAST)
-            current_x2 = np.zeros(FRAME_SAVE_LAST)
+            current_x1 = np.zeros(vap.frame_contxt_padding)
+            current_x2 = np.zeros(vap.frame_contxt_padding)
             
             while True:
                 
@@ -391,14 +358,14 @@ def proc_serv_in(port_number, vap):
                 
                 # Continue to receive data until the size of the data is
                 # less that the size of the VAP frame
-                if len(current_x1) < FRAME_SIZE_VAP + FRAME_SAVE_LAST:
+                if len(current_x1) < vap.audio_frame_size:
                     continue
                 
                 vap.process_vap(current_x1, current_x2)
                 
                 # Save the last 320 samples
-                current_x1 = current_x1[-FRAME_SAVE_LAST:]
-                current_x2 = current_x2[-FRAME_SAVE_LAST:]
+                current_x1 = current_x1[-vap.frame_contxt_padding:]
+                current_x2 = current_x2[-vap.frame_contxt_padding:]
                 
         except Exception as e:
             print('[IN] Disconnected by', addr)
@@ -451,6 +418,8 @@ if __name__ == "__main__":
     parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--port_num_in", type=int, default=50007)
     parser.add_argument("--port_num_out", type=int, default=50008)
+    parser.add_argument("--vap_process_rate", type=int, default=10)
+    parser.add_argument("--context_len_sec", type=float, default=5)
     parser.add_argument("--gpu", action='store_true')
     args = parser.parse_args()
     
@@ -465,7 +434,7 @@ if __name__ == "__main__":
     
     wait_input = True
 
-    vap = VAPRealTime(args.vap_model, args.cpc_model, device)
+    vap = VAPRealTime(args.vap_model, args.cpc_model, device, args.vap_process_rate, args.context_len_sec)
     
     list_socket_out = []
 
