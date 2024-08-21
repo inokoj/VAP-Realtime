@@ -69,6 +69,8 @@ GPUを使用したい場合は `requirements-gpu.txt` を用いてください�
 ### Step 1: VAPを起動
 
 VAPプログラムを起動する際には、学習済みVAPモデルとCPCモデルの両方を指定します。入力と出力のTCP/IPのポート番号も指定できます。
+使用するモデルのパラメータとして、`vap_process_rate` と `context_len_sec` を正しく設定する必要があります。
+詳しくは、[モデルの説明](#モデル) を確認してください。
 
 ```bash
 $ cd rvap/vap_main
@@ -77,7 +79,9 @@ $ python vap_main.py ^
     --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
-    --port_num_out 50008
+    --port_num_out 50008 \
+    --vap_process_rate 20 ^
+    --context_len_sec 5
 ```
 
 GPUを使用したい場合は、オプション `--gpu` を引数に追加してください。
@@ -263,20 +267,23 @@ $ python vap_bc_main.py ^
 ## モデル
 
 このリポジトリには、VAPとCPCのモデルがいくつか含まれています。これらのモデルを使用する場合は、[ライセンス](#lisence)に従ってください。
+モデルのパラメータには、`vap_process_rate` と `context_len_sec` があります。
+前者は VAP モデルで処理される１秒あたりのサンプル数、後者はVAPモデルに入力されるコンテキストの長さ(秒)に対応します。
+これらはトレーニング中に固定されるため、これらのパラメータを変更したい場合は、モデルを再トレーニングする必要があります。
 
 ### VAP
 
-| 種類 | 配置場所 | 説明 |
-| --- | --- | --- |
-| 日本語VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | [旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話を用いて学習された日本語モデル |
-| 英語VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル |
-| マルチリンガルVAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル |
+| 種類 | 配置場所 | 説明 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- | --- | --- |
+| 日本語VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | [旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話を用いて学習された日本語モデル | 20 | 5 |
+| 英語VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル | 20 | 5 |
+| マルチリンガルVAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル | 20 | 5 |
 
 ### 相槌予測VAP
 
-| 種類 | 配置場所 | 説明 |
-| --- | --- | --- |
-| 日本語相槌VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル |
+| 種類 | 配置場所 | 説明 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- | --- | --- |
+| 日本語相槌VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル | 10 | 5 |
 
 ### CPC
 
