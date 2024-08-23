@@ -305,12 +305,33 @@ __Real-time and Continuous Turn-taking Prediction Using Voice Activity Projectio
 International Workshop on Spoken Dialogue Systems Technology (IWSDS), 2024<br>
 https://arxiv.org/abs/2401.04868<br>
 
+```
+@inproceedings{inoue2024iwsds,
+    author = {Koji Inoue and Bing'er Jiang and Erik Ekstedt and Tatsuya Kawahara and Gabriel Skantze},
+    title = {Real-time and Continuous Turn-taking Prediction Using Voice Activity Projection},
+    booktitle = {International Workshop on Spoken Dialogue Systems Technology (IWSDS)},
+    year = {2024},
+    url = {https://arxiv.org/abs/2401.04868},
+}
+```
+
 If you use the multi-lingual VAP model, please also cite the following paper.
 
 Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze<br>
 __Multilingual Turn-taking Prediction Using Voice Activity Projection__<br>
 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING), pages 11873-11883, 2024<br>
 https://aclanthology.org/2024.lrec-main.1036/<br>
+
+```
+@inproceedings{inoue2024lreccoling,
+    author = {Koji Inoue and Bing'er Jiang and Erik Ekstedt and Tatsuya Kawahara and Gabriel Skantze},
+    title = {Multilingual Turn-taking Prediction Using Voice Activity Projection},
+    booktitle = {Proceedings of the Joint International Conference on Computational Linguistics and Language Resources and Evaluation (LREC-COLING)},
+    pages = {11873--11883},
+    year = {2024},
+    url = {https://aclanthology.org/2024.lrec-main.1036/},
+}
+```
 
 <br>
 
