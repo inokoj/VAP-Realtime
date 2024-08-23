@@ -278,7 +278,9 @@ They are fixed during the training so if you want to change those parameters, yo
 
 | Type | Location | Description | `vap_process_rate` | `context_len_sec` |
 | --- | --- | --- | --- | --- |
-| Japanese VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 5 |
+| Japanese VAP | `asset/vap/vap_state_dict_jp_20hz_2500msec.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 2.5 |
+| - | `asset/vap/vap_state_dict_jp_10hz_5000msec.pt` | - | 10 | 5 |
+| - | `asset/vap/vap_state_dict_jp_10hz_3000msec.pt` | - | 10 | 3 |
 | English VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) | 20 | 5 |
 | Multi-lingual VAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | Multi-lingual model for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 5 |
 
