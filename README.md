@@ -80,12 +80,12 @@ Please check out [the description of the model](#model).
 $ cd rvap/vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
+    --vap_model ../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008 ^
     --vap_process_rate 20 ^
-    --context_len_sec 5
+    --context_len_sec 2.5
 ```
 
 If you want to use a GPU, please add an argument `--gpu`.
@@ -276,13 +276,26 @@ They are fixed during the training so if you want to change those parameters, yo
 
 ### VAP
 
-| Type | Location | Description | `vap_process_rate` | `context_len_sec` |
-| --- | --- | --- | --- | --- |
-| Japanese VAP | `asset/vap/vap_state_dict_jp_20hz_2500msec.pt` | Japanese model trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 2.5 |
-| - | `asset/vap/vap_state_dict_jp_10hz_5000msec.pt` | - | 10 | 5 |
-| - | `asset/vap/vap_state_dict_jp_10hz_3000msec.pt` | - | 10 | 3 |
-| English VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | English model trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) | 20 | 5 |
-| Multi-lingual VAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | Multi-lingual model for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) | 20 | 5 |
+Japanese model (trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_jp_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_jp_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_jp_10hz_3000msec.pt` | 10 | 3 |
+
+English model (trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_eng_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_eng_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_eng_10hz_3000msec.pt` | 10 | 3 |
+
+Multi-lingual model (for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_tri_ecj_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_tri_ecj_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_tri_ecj_10hz_3000msec.pt` | 10 | 3 |
 
 ### Backchannel prediction VAP
 
