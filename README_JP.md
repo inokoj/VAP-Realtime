@@ -76,12 +76,12 @@ VAPプログラムを起動する際には、学習済みVAPモデルとCPCモ�
 $ cd rvap/vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/vap_state_dict_20hz_jpn.pt ^
+    --vap_model ../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008 \
     --vap_process_rate 20 ^
-    --context_len_sec 5
+    --context_len_sec 2.5
 ```
 
 GPUを使用したい場合は、オプション `--gpu` を引数に追加してください。
@@ -273,11 +273,26 @@ $ python vap_bc_main.py ^
 
 ### VAP
 
-| 種類 | 配置場所 | 説明 | `vap_process_rate` | `context_len_sec` |
-| --- | --- | --- | --- | --- |
-| 日本語VAP | `asset/vap/vap_state_dict_20hz_jpn.pt` | [旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話を用いて学習された日本語モデル | 20 | 5 |
-| 英語VAP | `asset/vap/vap_state_dict_20hz_eng.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル | 20 | 5 |
-| マルチリンガルVAP | `asset/vap/vap_state_dict_20hz_multi_ecj.pt` | [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル | 20 | 5 |
+日本語モデル ([旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話を用いて学習された日本語モデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_jp_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_jp_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_jp_10hz_3000msec.pt` | 10 | 3 |
+
+英語モデル ([Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_eng_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_eng_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_eng_10hz_3000msec.pt` | 10 | 3 |
+
+マルチリンガルモデル ([Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_tri_ecj_20hz_2500msec.pt` | 20 | 2.5 |
+| `asset/vap/vap_state_dict_tri_ecj_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap/vap_state_dict_tri_ecj_10hz_3000msec.pt` | 10 | 3 |
 
 ### 相槌予測VAP
 
