@@ -305,9 +305,13 @@ Multi-lingual model (for English, Mandarin Chinese, and Japanese, trained using 
 
 ### Backchannel prediction VAP
 
-| Type | Location | Description | `vap_process_rate` | `context_len_sec` |
-| --- | --- | --- | --- | --- |
-| Japanese backchannel VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | Backchannel prediction model fine-tuned with an attentive listening dialogue data using ERICA (WoZ) | 10 | 5 |
+Japanese backchannel model (fine-tuned with an attentive listening dialogue data using ERICA (WoZ))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap-bc/vap-bc_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
+| `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
 
 ### CPC
 

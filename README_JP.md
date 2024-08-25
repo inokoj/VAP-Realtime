@@ -302,9 +302,13 @@ $ python vap_bc_main.py ^
 
 ### 相槌予測VAP
 
-| 種類 | 配置場所 | 説明 | `vap_process_rate` | `context_len_sec` |
-| --- | --- | --- | --- | --- |
-| 日本語相槌VAP | `asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt` | ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル | 10 | 5 |
+日本語相槌モデル (ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap-bc/vap-bc_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
+| `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
 
 ### CPC
 
