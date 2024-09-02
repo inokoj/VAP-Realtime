@@ -251,7 +251,7 @@ python output/offline_prediction_visualizer/main.py --left_audio input/wav_sampl
 $ cd rvap/vap_bc
 
 $ python vap_bc_main.py ^
-    --vap_model ../asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt ^
+    --vap_model ../asset/vap-bc/vap-bc_state_dict_erica_20hz_5000msec.pt ^
     --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008
