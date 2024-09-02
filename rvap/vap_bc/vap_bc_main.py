@@ -134,8 +134,9 @@ class VapGPT(nn.Module):
         self.vap_head = nn.Linear(conf.dim, self.objective.n_classes)
 
         # For Backchannel
-        self.bc_head_react = nn.Linear(conf.dim, 1)
-        self.bc_head_emo = nn.Linear(conf.dim, 1)
+        self.bc_head = nn.Linear(conf.dim, 3)
+        # self.bc_head_react = nn.Linear(conf.dim, 1)
+        # self.bc_head_emo = nn.Linear(conf.dim, 1)
 
     def load_encoder(self, cpc_model):
         
@@ -268,18 +269,19 @@ class VAPRealTime():
             out = self.vap.ar(o1["x"], o2["x"], attention=False)
 
             # Outputs
-            bc_react = self.vap.bc_head_react(out["x"])
-            bc_emo = self.vap.bc_head_emo(out["x"])
-
-            p_bc_react = bc_react.sigmoid()
-            p_bc_emo = bc_emo.sigmoid()
+            bc = self.vap.bc_head(out["x"])
+            # bc_react = self.vap.bc_head_react(out["x"])
+            # bc_emo = self.vap.bc_head_emo(out["x"])
+            
+            p_bc_react = bc.softmax(dim=-1)[:, -1, 1]
+            p_bc_emo = bc.softmax(dim=-1)[:, -1, 2]
             
             # Get back to the CPU
             p_bc_react = p_bc_react.to('cpu')
             p_bc_emo = p_bc_emo.to('cpu')
             
-            self.result_p_bc_react = p_bc_react.tolist()[0][-1]
-            self.result_p_bc_emo = p_bc_emo.tolist()[0][-1]
+            self.result_p_bc_react = [p_bc_react]#.tolist()[0][-1]
+            self.result_p_bc_emo = [p_bc_emo]#.tolist()[0][-1]
             self.result_last_time = time.time()
             
             time_process = time.time() - time_start
@@ -414,7 +416,7 @@ if __name__ == "__main__":
     
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_model", type=str, default='../../asset/vap_bc/vap_bc_multi_state_dict_10hz_jpn.pt')
+    parser.add_argument("--vap_model", type=str, default='../../asset/vap_bc/vap-bc_state_dict_erica_10hz_5000msec.pt')
     parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--port_num_in", type=int, default=50007)
     parser.add_argument("--port_num_out", type=int, default=50008)

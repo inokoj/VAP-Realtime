@@ -308,6 +308,8 @@ Multi-lingual model (for English, Mandarin Chinese, and Japanese, trained using 
 Japanese backchannel model (fine-tuned with an attentive listening dialogue data using ERICA (WoZ))
 | Location | `vap_process_rate` | `context_len_sec` |
 | --- | --- | --- |
+| `asset/vap-bc/vap-bc_state_dict_erica_20hz_5000msec.pt` | 20 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_20hz_3000msec.pt` | 20 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |

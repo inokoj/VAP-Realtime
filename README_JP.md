@@ -305,6 +305,8 @@ $ python vap_bc_main.py ^
 日本語相槌モデル (ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル)
 | 配置場所 | `vap_process_rate` | `context_len_sec` |
 | --- | --- | --- |
+| `asset/vap-bc/vap-bc_state_dict_erica_20hz_5000msec.pt` | 20 | 5 |
+| `asset/vap-bc/vap-bc_state_dict_erica_20hz_3000msec.pt` | 20 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
