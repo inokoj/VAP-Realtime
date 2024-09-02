@@ -261,7 +261,7 @@ $ python vap_bc_main.py ^
 ```
 
 The input/output format is the same, but the output `p_now` and `p_future` are replaced with `p_bc_react` and `p_bc_emo`, respectively.
-`p_bc_react` represents the probability of occurrence of reactive backchannels (e.g., "Yeah"), and `p_bc_emo` represents the probability of occurrence of emotional backchannels (e.g., "Wow").
+`p_bc_react` represents the probability of occurrence of continuer backchannels (e.g., "Yeah"), and `p_bc_emo` represents the probability of occurrence of assessment backchannels (e.g., "Wow").
 This model predicts the probability of backchannels occurring 500 milliseconds later.
 Also, note that while the model input consists of 2-channel audio, it predicts the backchannels of the speaker on the first channel, meaning the second channel corresponds to the user's voice.
 
