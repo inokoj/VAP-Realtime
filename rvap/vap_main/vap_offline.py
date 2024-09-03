@@ -17,14 +17,26 @@ if __name__ == "__main__":
     
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_model", type=str, default='../asset/vap/vap_state_dict_20hz_jpn.pt')
-    parser.add_argument("--cpc_model", type=str, default='../asset/cpc/60k_epoch4-d0f474de.pt')
+    parser.add_argument("--vap_model", type=str, default='../../asset/vap/vap_state_dict_20hz_jpn.pt')
+    parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--filename_output", type=str, default='output_offline.txt')
-    parser.add_argument("--input_wav_left", type=str, default='../input/wav_sample/jpn_inoue_16k.wav')
-    parser.add_argument("--input_wav_right", type=str, default='../input/wav_sample/jpn_sumida_16k.wav')
+    parser.add_argument("--input_wav_left", type=str, default='../../input/wav_sample/jpn_inoue_16k.wav')
+    parser.add_argument("--input_wav_right", type=str, default='../../input/wav_sample/jpn_sumida_16k.wav')
+    parser.add_argument("--vap_process_rate", type=int, default=20)
+    parser.add_argument("--context_len_sec", type=float, default=5)
+    parser.add_argument("--gpu", action='store_true')
     args = parser.parse_args()
 
-    vap = VAPRealTime(args.vap_model, args.cpc_model)
+    #
+    # GPU Usage
+    #
+    device = torch.device('cpu')
+    if args.gpu:
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+    print('Device: ', device)
+
+    vap = VAPRealTime(args.vap_model, args.cpc_model, device, args.vap_process_rate, args.context_len_sec)
     
     # Load wav
     data_left, _ = sf.read(file=args.input_wav_left, dtype='float32')

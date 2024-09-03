@@ -76,10 +76,10 @@ VAPプログラムを起動する際には、学習済みVAPモデルとCPCモ�
 $ cd rvap/vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --vap_model ../../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
-    --port_num_out 50008 \
+    --port_num_out 50008 ^
     --vap_process_rate 20 ^
     --context_len_sec 2.5
 ```
@@ -213,10 +213,10 @@ __データフレームの構成__:
 $ cd rvap/vap_main
 
 $ python vap_offline.py ^
-    --vap_model '../asset/vap/vap_state_dict_20hz_jpn.pt' ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
-    --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav ^
-    --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav ^
+    --vap_model '../../asset/vap/vap_state_dict_20hz_jpn.pt' ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --input_wav_left ../../input/wav_sample/jpn_inoue_16k.wav ^
+    --input_wav_right ../../input/wav_sample/jpn_sumida_16k.wav ^
     --filename_output 'output_offline.txt'
 ```
 
@@ -251,10 +251,12 @@ python output/offline_prediction_visualizer/main.py --left_audio input/wav_sampl
 $ cd rvap/vap_bc
 
 $ python vap_bc_main.py ^
-    --vap_model ../asset/vap-bc/vap-bc_state_dict_erica_20hz_5000msec.pt ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --vap_model ../../asset/vap_bc/vap-bc_state_dict_erica_20hz_5000msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
-    --port_num_out 50008
+    --port_num_out 50008 ^
+    --vap_process_rate 20 ^
+    --context_len_sec 5
 ```
 
 入出力のフォーマットは同じで、出力の`p_now`と`p_future`がそれぞれ`p_bc_react`と`p_bc_emo`に置き換わります。

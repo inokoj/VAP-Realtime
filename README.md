@@ -80,8 +80,8 @@ Please check out [the description of the model](#model).
 $ cd rvap/vap_main
 
 $ python vap_main.py ^
-    --vap_model ../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --vap_model ../../asset/vap/vap_state_dict_jp_20hz_2500msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
     --port_num_out 50008 ^
     --vap_process_rate 20 ^
@@ -217,10 +217,10 @@ You can also batch process recorded wav files using `rvap/vap_main/vap_offline.p
 $ cd rvap/vap_main
 
 $ python vap_offline.py ^
-    --vap_model '../asset/vap/vap_state_dict_20hz_jpn.pt' ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
-    --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav ^
-    --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav ^
+    --vap_model '../../asset/vap/vap_state_dict_20hz_jpn.pt' ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --input_wav_left ../../input/wav_sample/jpn_inoue_16k.wav ^
+    --input_wav_right ../../input/wav_sample/jpn_sumida_16k.wav ^
     --filename_output 'output_offline.txt'
 ```
 
@@ -254,10 +254,12 @@ Please use the following main program:
 $ cd rvap/vap_bc
 
 $ python vap_bc_main.py ^
-    --vap_model ../asset/vap-bc/vap-bc_state_dict_erica_20hz_5000msec.pt ^
-    --cpc_model ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --vap_model ../../asset/vap_bc/vap-bc_state_dict_erica_20hz_5000msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
     --port_num_in 50007 ^
-    --port_num_out 50008
+    --port_num_out 50008 ^
+    --vap_process_rate 20 ^
+    --context_len_sec 5
 ```
 
 The input/output format is the same, but the output `p_now` and `p_future` are replaced with `p_bc_react` and `p_bc_emo`, respectively.
