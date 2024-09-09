@@ -439,12 +439,12 @@ if __name__ == "__main__":
     
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_model", type=str, default='../../asset/vap/vap_state_dict_20hz_jpn.pt')
+    parser.add_argument("--vap_model", type=str, default='../../asset/vap/vap_state_dict_jp_20hz_2500msec.pt')
     parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--port_num_in", type=int, default=50007)
     parser.add_argument("--port_num_out", type=int, default=50008)
     parser.add_argument("--vap_process_rate", type=int, default=20)
-    parser.add_argument("--context_len_sec", type=float, default=5)
+    parser.add_argument("--context_len_sec", type=float, default=2.5)
     parser.add_argument("--gpu", action='store_true')
     # parser.add_argument("--input_wav_left", type=str, default='wav/101_1_2-left-ope.wav')
     # parser.add_argument("--input_wav_right", type=str, default='wav/101_1_2-right-cus.wav')
