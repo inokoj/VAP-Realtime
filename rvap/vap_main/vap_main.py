@@ -244,7 +244,7 @@ class VAPRealTime():
         self.list_process_time_context = []
         self.last_interval_time = time.time()
     
-    def process_vap(self, x1, x2):
+    def process_vap(self, x1: list | np.ndarray, x2: list | np.ndarray):
         
         # Frame size
         # 20Hz -> 320 + 800 samples
@@ -257,9 +257,12 @@ class VAPRealTime():
         self.current_x2_audio = x2[self.frame_contxt_padding:]
         
         with torch.no_grad():
-            
-            x1_ = torch.tensor([[x1]], dtype=torch.float32, device=self.device)
-            x2_ = torch.tensor([[x2]], dtype=torch.float32, device=self.device)
+            if isinstance(x1, list):
+                x1_ = torch.tensor([[x1]], dtype=torch.float32, device=self.device)
+                x2_ = torch.tensor([[x2]], dtype=torch.float32, device=self.device)
+            else:
+                x1_ = torch.from_numpy(x1).to(self.device).unsqueeze(0).unsqueeze(0)
+                x2_ = torch.from_numpy(x2).to(self.device).unsqueeze(0).unsqueeze(0)
 
             e1, e2 = self.vap.encode_audio(x1_, x2_)
             

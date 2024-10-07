@@ -1,5 +1,5 @@
 # For VAP main
-torch==2.2.0
+torch>=2.2.0
 numpy==1.23.5
 einops==0.7.0
 
