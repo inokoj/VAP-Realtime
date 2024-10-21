@@ -8,3 +8,5 @@ vap_main/output_offline.txt
 /rvap/vap_bc/__pycache__
 all.bat
 *.bat
+/train/__pycache__
+/train/lightning_logs
