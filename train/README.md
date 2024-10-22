@@ -83,7 +83,7 @@ $ python train.py ^
     --seed 0
 ```
 
-## Evaluate
+## (4) Evaluation
 
 To run the testing, specify the test data file, along with other parameters, as shown below:
 
