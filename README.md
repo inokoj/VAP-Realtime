@@ -50,7 +50,7 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 ## Install
 
-This software requires a Python environment.
+This software requires a Python environment (over than version 3.9).
 Please refer to the required libraries listed in `requirements.txt`.
 
 You can directory install the libraries using it as

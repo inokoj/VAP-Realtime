@@ -3,7 +3,8 @@
 # For more information, visit: https://pytorch.org/get-started/locally/
 
 # For VAP main
-torch==2.2.0+cu118
+torch==2.3.0+cu118
 numpy==1.23.5
 einops==0.7.0
+torchaudio==2.3.0
 pytorch-lightning

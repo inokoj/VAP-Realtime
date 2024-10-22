@@ -683,7 +683,7 @@ class VAPModel(VapGPT, pl.LightningModule):
         # # input()
 
         out = self.shared_step(batch)
-        self.test_inference_time_all.append(out["inf_time"])
+        # self.test_inference_time_all.append(out["inf_time"])
         batch_size = batch["waveform"].shape[0]
         
         self.log("test_loss", out["vap_loss"], batch_size=batch_size, sync_dist=True)
@@ -778,7 +778,7 @@ class VAPModel(VapGPT, pl.LightningModule):
 
             self.metrics_step(preds, targets, split="test")
 
-    def test_epoch_end(self, *_):
+    def on_validation_epoch_end(self, *_):
         if hasattr(self, "test_metrics"):
             self.metrics_epoch("test")
 

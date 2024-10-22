@@ -1,6 +1,6 @@
 <h1>
 <p align="center">
-Training the VAP model
+Training VAP model
 </p>
 </h1>
 <!-- <p align="center">
@@ -85,4 +85,24 @@ $ python train.py ^
 
 ## Evaluate
 
-TBA
+To run the testing, specify the test data file, along with other parameters, as shown below:
+
+```bash
+python evaluation.py ^
+    --data_test_path sample/test.csv ^
+    --vap_encoder_type cpc ^
+    --vap_cpc_model_pt ../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --vap_freeze_encoder 1 ^
+    --vap_channel_layers 1 ^
+    --vap_cross_layers 3 ^
+    --vap_context_limit -1 ^
+    --vap_context_limit_cpc_sec -1 ^
+    --vap_frame_hz 50 ^
+    --event_frame_hz 50 ^
+    --data_batch_size 8 ^
+    --event_equal_hold_shift 0 ^
+    --devices 0 ^
+    --checkpoint ./trained_data/
+```
+
+With the current program, after the testing, you would be able to check the test loss in the file `runs_evaluation/score.csv`.
