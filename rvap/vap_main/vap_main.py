@@ -264,6 +264,9 @@ class VAPRealTime():
                 x1_ = torch.from_numpy(x1).to(self.device).unsqueeze(0).unsqueeze(0)
                 x2_ = torch.from_numpy(x2).to(self.device).unsqueeze(0).unsqueeze(0)
 
+            x1_ = x1_.float()
+            x2_ = x2_.float()
+
             e1, e2 = self.vap.encode_audio(x1_, x2_)
             
             self.e1_context.append(e1)
