@@ -235,6 +235,9 @@ class VAPRealTime():
         self.result_p_now = 0.
         self.result_p_future = 0.
         self.result_last_time = -1
+        
+        self.result_vad1 = 0.
+        self.result_vad2 = 0.
 
         self.process_time_abs = -1
 
@@ -286,6 +289,10 @@ class VAPRealTime():
             
             # Outputs
             logits = self.vap.vap_head(out["x"])
+            
+            vad1 = self.vap.va_classifier(o1["x"])
+            vad2 = self.vap.va_classifier(o2["x"])
+            
             probs = logits.softmax(dim=-1)
             
             p_now = self.vap.objective.probs_next_speaker_aggregate(
@@ -304,9 +311,15 @@ class VAPRealTime():
             p_now = p_now.to('cpu')
             p_future = p_future.to('cpu')
             
+            vad1 = vad1.sigmoid().to('cpu')[::,-1]
+            vad2 = vad2.sigmoid().to('cpu')[::,-1]
+            
             self.result_p_now = p_now.tolist()[0][-1]
             self.result_p_future = p_future.tolist()[0][-1]
             self.result_last_time = time.time()
+            
+            self.result_vad1 = [vad1]
+            self.result_vad2 = [vad2]
             
             time_process = time.time() - time_start
             
@@ -416,10 +429,17 @@ def proc_serv_out_dist(list_socket_out, vap):
         p_now = copy.copy(vap.result_p_now)
         p_future = copy.copy(vap.result_p_future)
         
+        vad1 = copy.copy(vap.result_vad1)
+        vad2 = copy.copy(vap.result_vad2)
+        
+        # print(vad1)
+        # print(vad2)
+        
         vap_result = {
             "t": t,
             "x1": x1, "x2": x2,
-            "p_now": p_now, "p_future": p_future
+            "p_now": p_now, "p_future": p_future,
+            "vad1": vad1, "vad2": vad2
         }
         
         data_sent = util.conv_vapresult_2_bytearray(vap_result)
