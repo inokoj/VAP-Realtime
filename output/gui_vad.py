@@ -78,10 +78,10 @@ def process_client(server_ip='127.0.0.1', port_num=50008):
                 p_ft = np.append(p_ft, vap_result['p_future'][0])
                 p_ft = p_ft[-MAX_CONTEXT_LEN:]
                 
-                vad1 = np.append(vad1, vap_result['vad1'])
+                vad1 = np.append(vad1, vap_result['vad'][0])
                 vad1 = vad1[-MAX_CONTEXT_LEN:]
 
-                vad2 = np.append(vad2, vap_result['vad2'])
+                vad2 = np.append(vad2, vap_result['vad'][1])
                 vad2 = vad2[-MAX_CONTEXT_LEN:]
                 
                 #print('Time elapsed: %.3f' % (time.time() - time_start))

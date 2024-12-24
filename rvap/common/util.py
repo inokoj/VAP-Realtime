@@ -137,11 +137,8 @@ def conv_vapresult_2_bytearray(vap_result):
     b += len(vap_result['p_future']).to_bytes(4, BYTE_ORDER)
     b += conv_floatarray_2_byte(vap_result['p_future'])
     
-    b += len(vap_result['vad1']).to_bytes(4, BYTE_ORDER)
-    b += conv_floatarray_2_byte(vap_result['vad1'])
-    
-    b += len(vap_result['vad2']).to_bytes(4, BYTE_ORDER)
-    b += conv_floatarray_2_byte(vap_result['vad2'])
+    b += len(vap_result['vad']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['vad'])
     
     return b
 
@@ -174,14 +171,10 @@ def conv_bytearray_2_vapresult(barr):
     p_future = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_future])
     idx += 8*len_p_future
     
-    len_vap1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    len_vad = struct.unpack('<I', barr[idx:idx+4])[0]
     idx += 4
-    vad1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_vap1])
-    idx += 8*len_vap1
-    
-    len_vap2 = struct.unpack('<I', barr[idx:idx+4])[0]
-    idx += 4
-    vad2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_vap2])
+    vad = conv_bytearray_2_floatarray(barr[idx:idx+8*len_vad])
+    idx += 8*len_vad
 
     result_vap = {
         't': t,
@@ -189,8 +182,7 @@ def conv_bytearray_2_vapresult(barr):
         'x2': x2,
         'p_now': p_now,
         'p_future': p_future,
-        'vad1': vad1,
-        'vad2': vad2
+        'vad': vad
     }
     
     return result_vap
