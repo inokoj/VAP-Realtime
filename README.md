@@ -206,6 +206,9 @@ Under the specified condition, the size of each output data should be 12,860 byt
 | 12840 - 12843 | Int | p_future length (2) |
 | 12844 - 12851 | Double | p_future for (Individual 1) |
 | 12852 - 12859 | Double | p_future for (Individual 2) |
+| 12860 - 12863 | Int |  VAD length (2) |
+| 12864 - 12861 | Double | VAD for (Individual 1) |
+| 12862 - 12869 | Double | VAD for (Individual 2) |
 
 <br>
 
