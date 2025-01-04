@@ -96,7 +96,9 @@ class VapDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             pin_memory=self.pin_memory,
             num_workers=self.num_workers,
+            persistent_workers=False if self.num_workers == 0 else True,
             shuffle=True,
+            drop_last=True,
         )
 
     def val_dataloader(self):
@@ -105,7 +107,9 @@ class VapDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             pin_memory=self.pin_memory,
             num_workers=self.num_workers,
+            persistent_workers=False if self.num_workers == 0 else True,
             shuffle=False,
+            drop_last=True,
         )
 
     def test_dataloader(self):
@@ -114,7 +118,9 @@ class VapDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             pin_memory=self.pin_memory,
             num_workers=self.num_workers,
+            persistent_workers=False if self.num_workers == 0 else True,
             shuffle=False,
+            drop_last=True,
         )
 
     def __repr__(self):
