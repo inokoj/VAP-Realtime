@@ -183,6 +183,7 @@ def train() -> None:
     dm = VapDataModule(
         train_path=dconf.train_path,
         val_path=dconf.val_path,
+        test_path=None,
         horizon=2,
         batch_size=dconf.batch_size,
         num_workers=dconf.num_workers,
@@ -597,9 +598,10 @@ class VAPModel(VapGPT, pl.LightningModule):
     def training_step(self, batch, batch_idx, **kwargs):
         
         out = self.shared_step(batch)
+        batch_size = batch["waveform"].shape[0]
 
-        self.log("loss_train", out["vap_loss"], on_epoch=True, on_step=True, sync_dist=True)
-        self.log("loss_train_va", out["vad_loss"], on_epoch=True, on_step=True, sync_dist=True)        
+        self.log("loss_train", out["vap_loss"], batch_size=batch_size, on_epoch=True, on_step=True, sync_dist=True)
+        self.log("loss_train_va", out["vad_loss"], batch_size=batch_size, on_epoch=True, on_step=True, sync_dist=True)        
         loss = out["vap_loss"] + out["vad_loss"]
 
         return {"loss": loss}
@@ -612,8 +614,8 @@ class VAPModel(VapGPT, pl.LightningModule):
         out = self.shared_step(batch)
         batch_size = batch["waveform"].shape[0]
         
-        self.log("val_loss", out["vap_loss"], on_epoch=True, on_step=True, sync_dist=True)
-        self.log("val_loss_va", out["vad_loss"], on_epoch=True, on_step=True, sync_dist=True)
+        self.log("val_loss", out["vap_loss"], batch_size=batch_size, on_epoch=True, on_step=True, sync_dist=True)
+        self.log("val_loss_va", out["vad_loss"], batch_size=batch_size, on_epoch=True, on_step=True, sync_dist=True)
 
         # self.log("val_loss_step", out["vap_loss"], on_step=True, sync_dist=True)
         # self.log("val_loss_va_step", out["vad_loss"], on_step=True, sync_dist=True)
