@@ -24,7 +24,8 @@ class WavLoaderForVAP:
                 filename_user2,
                 filename_mix=None,
                 server_ip='127.0.0.1',
-                server_port=50007
+                server_port=50007,
+                audio_gain=1.0
         ):
         
         # Create mixed audio file using pydub
@@ -42,6 +43,8 @@ class WavLoaderForVAP:
 
         self.server_ip = server_ip
         self.server_port = server_port
+        
+        self.audio_gain = audio_gain
 
         print('----------------------------------')
         print('Server IP: {}'.format(self.server_ip))
@@ -69,6 +72,10 @@ class WavLoaderForVAP:
             if i + self.FRAME_SIZE > len(data):
                 break
             d = data[i:i+self.FRAME_SIZE]
+            
+            if self.audio_gain != 1.0:
+                d = d * self.audio_gain
+            
             self.queue1.put(d)
         
         data, _ = sf.read(file=self.filename2, dtype='float32')
@@ -76,6 +83,10 @@ class WavLoaderForVAP:
             if i + self.FRAME_SIZE > len(data):
                 break
             d = data[i:i+self.FRAME_SIZE]
+            
+            if self.audio_gain != 1.0:
+                d = d * self.audio_gain
+            
             self.queue2.put(d)
 
         done_millisec = 0
@@ -150,6 +161,7 @@ if __name__ == '__main__':
     parser.add_argument("--input_wav_right", type=str, default='wav_sample/jpn_sumida_16k.wav')
     parser.add_argument("--play_wav_stereo", type=str, default='wav_sample/jpn_mix_16k.wav')
     parser.add_argument("--command_server_port_num", type=int, default=50009)
+    parser.add_argument("--audio_gain", type=float, default=1.0)
     args = parser.parse_args()
     
     # Load wav files and send data to the server
@@ -158,7 +170,8 @@ if __name__ == '__main__':
         filename_user2=args.input_wav_right,
         filename_mix=args.play_wav_stereo,
         server_ip=args.server_ip,
-        server_port=args.port_num
+        server_port=args.port_num,
+        audio_gain=args.audio_gain
     )
     
     # Start to process the client

@@ -18,7 +18,8 @@ class MicLoaderForVAP:
     
     def __init__(self,
                 server_ip='127.0.0.1',
-                server_port=50007
+                server_port=50007,
+                audio_gain=1.0
         ):
 
         # Set up the microphone
@@ -32,6 +33,7 @@ class MicLoaderForVAP:
 
         self.server_ip = server_ip
         self.server_port = server_port
+        self.audio_gain = audio_gain
 
         print('----------------------------------')
         print('Server IP: {}'.format(self.server_ip))
@@ -58,7 +60,13 @@ class MicLoaderForVAP:
             
             try:
                 d = self.stream.read(self.FRAME_SIZE, exception_on_overflow=False)
-                d = [float(a) for a in np.frombuffer(d, dtype=np.float32)]
+                
+                if self.audio_gain != 1.0:
+                    d = np.frombuffer(d, dtype=np.float32) * self.audio_gain
+                else:
+                    d = np.frombuffer(d, dtype=np.float32)
+                
+                d = [float(a) for a in d]
                 
                 if self.is_running:
 
@@ -108,12 +116,14 @@ if __name__ == '__main__':
     parser.add_argument("--server_ip", type=str, default='127.0.0.1')
     parser.add_argument("--port_num", type=int, default=50007)
     parser.add_argument("--command_server_port_num", type=int, default=50009)
+    parser.add_argument("--audio_gain", type=float, default=1.0)
     args = parser.parse_args()
     
     # Load wav files and send data to the server
     loader = MicLoaderForVAP(
         server_ip=args.server_ip,
-        server_port=args.port_num
+        server_port=args.port_num,
+        audio_gain=args.audio_gain
     )
 
     # Start to process the client

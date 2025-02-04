@@ -351,7 +351,7 @@ def proc_serv_out(list_socket_out, port_number=50008):
             
             print('[OUT] Current client num = %d' % len(list_socket_out))
 
-def proc_serv_in(port_number, vap):
+def proc_serv_in(port_number, vap, audio_gain=1.0):
     
     FRAME_SIZE_INPUT = 160
         
@@ -389,6 +389,10 @@ def proc_serv_in(port_number, vap):
                     break
                 
                 x1, x2 = util.conv_bytearray_2_2floatarray(data)
+                
+                if audio_gain != 1.0:
+                    x1 = np.array(x1) * audio_gain
+                    x2 = np.array(x2) * audio_gain
                 
                 current_x1 = np.concatenate([current_x1, x1])
                 current_x2 = np.concatenate([current_x2, x2])
@@ -469,6 +473,7 @@ if __name__ == "__main__":
     parser.add_argument("--vap_process_rate", type=int, default=20)
     parser.add_argument("--context_len_sec", type=float, default=2.5)
     parser.add_argument("--gpu", action='store_true')
+    parser.add_argument("--audio_gain", type=float, default=1.0)
     # parser.add_argument("--input_wav_left", type=str, default='wav/101_1_2-left-ope.wav')
     # parser.add_argument("--input_wav_right", type=str, default='wav/101_1_2-right-cus.wav')
     # parser.add_argument("--play_wav_stereo", type=str, default='wav/101_1_2.wav')
@@ -492,7 +497,13 @@ if __name__ == "__main__":
     
     wait_input = True
 
-    vap = VAPRealTime(args.vap_model, args.cpc_model, device, args.vap_process_rate, args.context_len_sec)
+    vap = VAPRealTime(
+        args.vap_model,
+        args.cpc_model,
+        device,
+        args.vap_process_rate,
+        args.context_len_sec,
+    )
     
     list_socket_out = []
 
@@ -507,7 +518,7 @@ if __name__ == "__main__":
     t_server_out_distribute.start()
 
     # This process must be run in the main thread
-    proc_serv_in(args.port_num_in, vap)
+    proc_serv_in(args.port_num_in, vap, args.audio_gain)
     
     # Continue unitl pressind "Ctrl+c"
     print('Press Ctrl+c to stop')
