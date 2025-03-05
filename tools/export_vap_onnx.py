@@ -30,8 +30,8 @@ if __name__ == "__main__":
     #   x1_.shape: torch.Size([1, 1, 1120]), x2_.shape: torch.Size([1, 1, 1120])
     data_left_frame = torch.randn([1, 1, frame_size])
     data_right_frame = torch.randn([1, 1, frame_size])
-    e1_context = torch.randn(1, 1, 256)
-    e2_context = torch.randn(1, 1, 256)
+    e1_context = torch.randn(1, 1, args.cpc_encoder_feature_length)
+    e2_context = torch.randn(1, 1, args.cpc_encoder_feature_length)
 
     vap_model_without_ext = os.path.splitext(os.path.basename(args.vap_model))[0]
     onnx_file = f"{vap_model_without_ext}.onnx"
