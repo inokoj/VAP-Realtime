@@ -32,7 +32,6 @@ if __name__ == "__main__":
     data_right_frame = torch.randn([1, 1, frame_size])
     e1_context = torch.randn(1, 1, 256)
     e2_context = torch.randn(1, 1, 256)
-    # p_now, p_future, vad1, vad2, e1, e2 = vap(data_left_frame, data_right_frame, e1_context, e2_context)
 
     vap_model_without_ext = os.path.splitext(os.path.basename(args.vap_model))[0]
     onnx_file = f"{vap_model_without_ext}.onnx"

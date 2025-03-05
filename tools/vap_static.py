@@ -183,7 +183,7 @@ class VAPRealTimeStatic(nn.Module):
 
         self.device = device
 
-        sd = torch.load(vap_model, map_location=torch.device('cpu'))
+        sd = torch.load(vap_model, map_location=self.device)
         self.vap_gpt.load_encoder(cpc_model=cpc_model)
         self.vap_gpt.load_state_dict(sd, strict=False)
 
