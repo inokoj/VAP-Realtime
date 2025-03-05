@@ -13,7 +13,7 @@ if __name__ == "__main__":
     parser.add_argument("--vap_model", type=str, default='../asset/vap/vap_state_dict_jp_20hz_2500msec.pt')
     parser.add_argument("--cpc_model", type=str, default='../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--vap_process_rate", type=int, default=20)
-    parser.add_argument("--context_len_sec", type=int, default=5)
+    parser.add_argument("--context_len_sec", type=float, default=2.5)
     parser.add_argument("--cpc_encoder_feature_length", type=int, default=256)
     parser.add_argument("--onnx_opset", type=int, default=17)
     args = parser.parse_args()
