@@ -224,7 +224,7 @@ class VAPRealTime(AbstractModel):
         )
         BINS_P_NOW = [0, 1]
         BINS_PFUTURE = [2, 3]
-        CALC_PROCESS_TIME_INTERVAL = 100
+        CALC_PROCESS_TIME_INTERVAL = 50 #100
 
         self.audio_contenxt_lim_sec = context_len_sec
         self.frame_rate = vap_process_rate
@@ -314,7 +314,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_wav_left", type=str, default='../input/wav_sample/jpn_inoue_16k.wav')
     parser.add_argument("--input_wav_right", type=str, default='../input/wav_sample/jpn_sumida_16k.wav')
     parser.add_argument("--vap_process_rate", type=int, default=20)
-    parser.add_argument("--context_len_sec", type=float, default=5)
+    parser.add_argument("--context_len_sec", type=float, default=2.5)
     parser.add_argument("--gpu", action='store_true')
     args = parser.parse_args()
 
