@@ -274,7 +274,7 @@ class VAPRealTime(AbstractModel):
         """
         x1_ = x1[np.newaxis, np.newaxis, ...]
         x2_ = x2[np.newaxis, np.newaxis, ...]
-        a=0
+
         p_now, p_future, vad1, vad2, e1, e2 = super().process_vap(
             input_datas=[
                 x1_,
