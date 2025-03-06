@@ -13,7 +13,7 @@ if __name__ == "__main__":
     parser.add_argument("--vap_model", type=str, default='../asset/vap/vap_state_dict_jp_20hz_2500msec.pt')
     parser.add_argument("--cpc_model", type=str, default='../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--vap_process_rate", type=int, default=20)
-    parser.add_argument("--context_len_sec", type=float, default=2.5)
+    parser.add_argument("--context_len_sec", type=float, default=5.0)
     parser.add_argument("--cpc_encoder_feature_length", type=int, default=256)
     parser.add_argument("--onnx_opset", type=int, default=17)
     args = parser.parse_args()
@@ -21,7 +21,13 @@ if __name__ == "__main__":
     device = torch.device('cpu')
     print('Device: ', device)
 
-    vap = VAPRealTimeStatic(args.vap_model, args.cpc_model, device, args.vap_process_rate, args.context_len_sec)
+    vap = VAPRealTimeStatic(
+        vap_model=args.vap_model,
+        cpc_model=args.cpc_model,
+        device=device,
+        frame_rate=args.vap_process_rate,
+        context_len_sec=args.context_len_sec,
+    )
 
     frame_size = vap.audio_frame_size
 
@@ -51,7 +57,7 @@ if __name__ == "__main__":
             'vad2' : {0: '1'},
             'e1_context' : {1: 'M'},
             'e2_context' : {1: 'M'},
-        }
+        },
     )
 
     # onnx shape inference

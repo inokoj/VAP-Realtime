@@ -146,7 +146,6 @@ class VapGPT(nn.Module):
             freeze=self.conf.freeze_encoder,
             cpc_model=cpc_model
         )
-
         self.encoder2 = self.encoder2.eval()
 
         if self.conf.freeze_encoder == 1:
@@ -175,7 +174,7 @@ class VAPRealTimeStatic(nn.Module):
 
     CALC_PROCESS_TIME_INTERVAL = 100
 
-    def __init__(self, vap_model, cpc_model, device, frame_rate, context_len_sec):
+    def __init__(self, vap_model: str, cpc_model: str, device: torch.device, frame_rate: int, context_len_sec: float):
         super(VAPRealTimeStatic, self).__init__()
 
         conf = VapConfig()
@@ -247,7 +246,7 @@ class VAPRealTimeStatic(nn.Module):
         with torch.no_grad():
             # e1.shape: torch.Size([1, 1, 256])
             # e2.shape: torch.Size([1, 1, 256])
-            e1, e2 = self.vap_gpt.encode_audio(x1_, x2_)
+            e1, e2 = self.vap_gpt.encode_audio(audio1=x1_, audio2=x2_)
 
             # x1/x2 の形状遷移
             #   1回目のforward時の e1_context/e2_context は torch.zeros([1, 2, 256])
@@ -282,8 +281,8 @@ class VAPRealTimeStatic(nn.Module):
                 to_bin=self.BINS_PFUTURE[1]
             )
 
-            vad1 = vad1.sigmoid()[::,-1]
-            vad2 = vad2.sigmoid()[::,-1]
+            vad1 = vad1.sigmoid()[::, -1]
+            vad2 = vad2.sigmoid()[::, -1]
 
             # p_now.shape: torch.Size([1, 68, 2])
             # p_future.shape: torch.Size([1, 68, 2])

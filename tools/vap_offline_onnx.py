@@ -224,7 +224,7 @@ class VAPRealTime(AbstractModel):
         )
         BINS_P_NOW = [0, 1]
         BINS_PFUTURE = [2, 3]
-        CALC_PROCESS_TIME_INTERVAL = 50 #100
+        CALC_PROCESS_TIME_INTERVAL = 100
 
         self.audio_contenxt_lim_sec = context_len_sec
         self.frame_rate = vap_process_rate
@@ -266,10 +266,10 @@ class VAPRealTime(AbstractModel):
 
         Parameters
         ----------
-        x1: list | np.ndarray
+        x1: np.ndarray
             Left frame. [frame_size]
 
-        x2: list | np.ndarray
+        x2: np.ndarray
             Right frame. [frame_size]
         """
         x1_ = x1[np.newaxis, np.newaxis, ...]
@@ -286,8 +286,8 @@ class VAPRealTime(AbstractModel):
         self.e1_context.append(e1)
         self.e2_context.append(e2)
 
-        self.result_p_now = p_now.squeeze()#[-1]
-        self.result_p_future = p_future.squeeze()#[-1]
+        self.result_p_now = p_now.squeeze()
+        self.result_p_future = p_future.squeeze()
 
 
 def is_package_installed(package_name: str):
@@ -314,7 +314,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_wav_left", type=str, default='../input/wav_sample/jpn_inoue_16k.wav')
     parser.add_argument("--input_wav_right", type=str, default='../input/wav_sample/jpn_sumida_16k.wav')
     parser.add_argument("--vap_process_rate", type=int, default=20)
-    parser.add_argument("--context_len_sec", type=float, default=2.5)
+    parser.add_argument("--context_len_sec", type=float, default=5.0)
     parser.add_argument("--gpu", action='store_true')
     args = parser.parse_args()
 
