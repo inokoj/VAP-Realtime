@@ -9,6 +9,7 @@ spo4onn==1.0.5
 ```
 
 ## 2. Export ONNX
+- sample: [vap_state_dict_jp_20hz_2500msec_static.onnx.zip](https://github.com/user-attachments/files/19103093/vap_state_dict_jp_20hz_2500msec_static.onnx.zip)
 - Command prompt
 ```shell
 python export_vap_onnx.py ^
@@ -112,3 +113,15 @@ http://127.0.0.1:8088/vap_offline_tfjs.html
 ```
 - Results
 ![Image](https://github.com/user-attachments/assets/b1e02b93-9c9c-496b-807e-0f1ba3de8c52)
+
+## 7. onnxruntime-web (wasm) offline test
+Starting the HTTP Server.
+```bash
+python -m http.server 8088
+```
+Start your browser and access the following URL.
+```
+http://127.0.0.1:8088/vap_offline_onnxweb.html
+```
+- Results
+![Image](https://github.com/user-attachments/assets/6443816c-bd42-4bff-9096-1a29152d672c)
