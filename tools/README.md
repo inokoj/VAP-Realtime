@@ -111,4 +111,4 @@ Start your browser and access the following URL.
 http://127.0.0.1:8088/vap_offline_tfjs.html
 ```
 - Results
-![Image](https://github.com/user-attachments/assets/5a683135-4730-4d8f-aa22-160030d2ad3e)
+![Image](https://github.com/user-attachments/assets/b1e02b93-9c9c-496b-807e-0f1ba3de8c52)
