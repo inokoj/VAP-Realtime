@@ -389,9 +389,8 @@ if __name__ == "__main__":
 
         vap.process_vap(data_left_frame, data_right_frame)
 
-
-        p_future = vap.result_p_future
         p_now = vap.result_p_now
+        p_future = vap.result_p_future
 
         result.append({
             't': time_stamp,
