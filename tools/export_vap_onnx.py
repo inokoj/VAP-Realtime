@@ -1,5 +1,4 @@
 import torch
-import soundfile as sf
 from tools.vap_static import VAPRealTimeStatic
 import argparse
 import os
