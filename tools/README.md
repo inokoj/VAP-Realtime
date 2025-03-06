@@ -4,7 +4,13 @@ pip install \
 onnx==1.17.0 \
 onnxruntime==1.18.1 \
 onnxsim==0.4.30 \
-soundfile==0.12.1
+soundfile==0.12.1 \
+spo4onn==1.0.5 \
+onnx2tf>=1.26.8 \
+tensorflowjs \
+tensorflow_decision_forests \
+ydf \
+tensorflow_hub
 ```
 
 ## 2. Export ONNX
@@ -40,7 +46,7 @@ python export_vap_onnx.py \
 - Command prompt
 ```shell
 python vap_offline_onnx.py ^
---vap_onnx_model vap_state_dict_jp_20hz_2500msec.onnx ^
+--vap_onnx_model vap_state_dict_jp_20hz_2500msec_static.onnx ^
 --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav ^
 --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav ^
 --filename_output ./output_offline.txt
@@ -48,7 +54,7 @@ python vap_offline_onnx.py ^
 - PowerShell
 ```powershell
 python vap_offline_onnx.py `
---vap_onnx_model vap_state_dict_jp_20hz_2500msec.onnx `
+--vap_onnx_model vap_state_dict_jp_20hz_2500msec_static.onnx `
 --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav `
 --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav `
 --filename_output ./output_offline.txt
@@ -56,7 +62,7 @@ python vap_offline_onnx.py `
 - Bash
 ```bash
 python vap_offline_onnx.py \
---vap_onnx_model vap_state_dict_jp_20hz_2500msec.onnx \
+--vap_onnx_model vap_state_dict_jp_20hz_2500msec_static.onnx \
 --input_wav_left ../input/wav_sample/jpn_inoue_16k.wav \
 --input_wav_right ../input/wav_sample/jpn_sumida_16k.wav \
 --filename_output ./output_offline.txt
@@ -83,4 +89,10 @@ python ../output/offline_prediction_visualizer/main.py \
 --left_audio ../input/wav_sample/jpn_inoue_16k.wav \
 --right_audio ../input/wav_sample/jpn_sumida_16k.wav \
 --prediction ./output_offline.txt
+```
+
+## 5. tflte/tfjs conversion
+```bash
+python export_vap_onnx.py \
+--vap_onnx_model ./vap_state_dict_jp_20hz_2500msec_static.onnx
 ```

@@ -3,6 +3,7 @@ from tools.vap_static import VAPRealTimeStatic
 import argparse
 import os
 import onnx
+from spo4onnx import partial_optimization
 from onnxsim import simplify
 
 if __name__ == "__main__":
@@ -29,6 +30,8 @@ if __name__ == "__main__":
     )
 
     frame_size = vap.audio_frame_size
+    vap_model_without_ext = os.path.splitext(os.path.basename(args.vap_model))[0]
+    onnx_file = f"{vap_model_without_ext}.onnx"
 
     # vap_state_dict_jp_20hz_2500msec.pt
     #   data_left_frame.shape[x1]: (1120,), data_right_frame.shape[x2]: (1120,)
@@ -37,9 +40,6 @@ if __name__ == "__main__":
     data_right_frame = torch.randn([1, 1, frame_size])
     e1_context = torch.randn(1, 1, args.cpc_encoder_feature_length)
     e2_context = torch.randn(1, 1, args.cpc_encoder_feature_length)
-
-    vap_model_without_ext = os.path.splitext(os.path.basename(args.vap_model))[0]
-    onnx_file = f"{vap_model_without_ext}.onnx"
 
     # onnx export
     torch.onnx.export(
@@ -58,12 +58,45 @@ if __name__ == "__main__":
             'e2_context' : {1: 'M'},
         },
     )
-
     # onnx shape inference
     original_onnx = onnx.load(onnx_file)
     shape_infered_onnx = onnx.shape_inference.infer_shapes(original_onnx)
     onnx.save(shape_infered_onnx, onnx_file)
+    # onnx simplify
+    shape_infered_onnx = onnx.load(onnx_file)
+    simplified_onnx, check = simplify(shape_infered_onnx)
+    onnx.save(simplified_onnx, onnx_file)
 
+    CALC_PROCESS_TIME_INTERVAL = 100
+    data_left_frame = torch.randn([1, 1, frame_size])
+    data_right_frame = torch.randn([1, 1, frame_size])
+    e1_context = torch.randn(1, CALC_PROCESS_TIME_INTERVAL - 1, args.cpc_encoder_feature_length)
+    e2_context = torch.randn(1, CALC_PROCESS_TIME_INTERVAL - 1, args.cpc_encoder_feature_length)
+    onnx_file = f"{vap_model_without_ext}_static.onnx"
+
+    torch.onnx.export(
+        model=vap,
+        args=(data_left_frame, data_right_frame, e1_context, e2_context),
+        f=onnx_file,
+        opset_version=args.onnx_opset,
+        input_names=['data_left_frame', 'data_right_frame', 'e1_context', 'e2_context'],
+        output_names=['p_now', 'p_future', 'vad1', 'vad2', 'e1', 'e2'],
+        dynamic_axes={
+            'p_now' : {0: '1'},
+            'p_future' : {0: '1'},
+            'vad1' : {0: '1'},
+            'vad2' : {0: '1'},
+        },
+    )
+    # ONNX Einsum optimization
+    partial_optimization(
+        input_onnx_file_path=onnx_file,
+        output_onnx_file_path=onnx_file,
+    )
+    # onnx shape inference
+    original_onnx = onnx.load(onnx_file)
+    shape_infered_onnx = onnx.shape_inference.infer_shapes(original_onnx)
+    onnx.save(shape_infered_onnx, onnx_file)
     # onnx simplify
     shape_infered_onnx = onnx.load(onnx_file)
     simplified_onnx, check = simplify(shape_infered_onnx)

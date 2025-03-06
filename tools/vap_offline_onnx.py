@@ -195,7 +195,7 @@ class VAPRealTime(AbstractModel):
         self,
         *,
         runtime: str = 'onnx',
-        vap_onnx_model: str = 'vap_state_dict_jp_20hz_2500msec.onnx',
+        vap_onnx_model: str = 'vap_state_dict_jp_20hz_2500msec_static.onnx',
         providers: List = None,
         vap_process_rate: int = 20,
         context_len_sec: float = 5,
@@ -251,9 +251,10 @@ class VAPRealTime(AbstractModel):
         self.process_time_abs = -1
 
         self.e1_context = Deque(maxlen=CALC_PROCESS_TIME_INTERVAL - 1)
-        self.e1_context.append(np.zeros([1, 1, 256], dtype=np.float32))
         self.e2_context = Deque(maxlen=CALC_PROCESS_TIME_INTERVAL - 1)
-        self.e2_context.append(np.zeros([1, 1, 256], dtype=np.float32))
+        for _ in range(CALC_PROCESS_TIME_INTERVAL - 1):
+            self.e1_context.append(np.zeros([1, 1, 256], dtype=np.float32))
+            self.e2_context.append(np.zeros([1, 1, 256], dtype=np.float32))
 
         self.list_process_time_context = []
 
@@ -309,8 +310,8 @@ if __name__ == "__main__":
 
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_onnx_model", type=str, default='./vap_state_dict_jp_20hz_2500msec.onnx')
-    parser.add_argument("--filename_output", type=str, default='./output_onnx_offline.txt')
+    parser.add_argument("--vap_onnx_model", type=str, default='./vap_state_dict_jp_20hz_2500msec_static.onnx')
+    parser.add_argument("--filename_output", type=str, default='./output_offline.txt')
     parser.add_argument("--input_wav_left", type=str, default='../input/wav_sample/jpn_inoue_16k.wav')
     parser.add_argument("--input_wav_right", type=str, default='../input/wav_sample/jpn_sumida_16k.wav')
     parser.add_argument("--vap_process_rate", type=int, default=20)
