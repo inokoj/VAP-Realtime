@@ -5,12 +5,7 @@ onnx==1.17.0 \
 onnxruntime==1.18.1 \
 onnxsim==0.4.30 \
 soundfile==0.12.1 \
-spo4onn==1.0.5 \
-onnx2tf>=1.26.8 \
-tensorflowjs \
-tensorflow_decision_forests \
-ydf \
-tensorflow_hub
+spo4onn==1.0.5
 ```
 
 ## 2. Export ONNX
@@ -92,6 +87,15 @@ python ../output/offline_prediction_visualizer/main.py \
 ```
 
 ## 5. tflte/tfjs conversion
+```bash
+pip install \
+tensorflow \
+tensorflowjs \
+tensorflow_decision_forests \
+ydf \
+tensorflow_hub \
+onnx2tf>=1.26.8
+```
 ```bash
 python export_vap_onnx.py \
 --vap_onnx_model ./vap_state_dict_jp_20hz_2500msec_static.onnx
