@@ -20,6 +20,7 @@ if __name__ == "__main__":
             "e1_context",
             "e2_context",
         ],
+        enable_rnn_unroll=True,
         check_onnx_tf_outputs_elementwise_close_full=True,
         replace_to_pseudo_operators=["Erf"],
     )
