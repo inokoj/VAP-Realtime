@@ -97,7 +97,7 @@ tensorflow_hub \
 onnx2tf>=1.26.8
 ```
 ```bash
-python export_vap_onnx.py \
+python export_vap_tflite_tfjs.py \
 --vap_onnx_model ./vap_state_dict_jp_20hz_2500msec_static.onnx
 ```
 
