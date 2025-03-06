@@ -28,4 +28,5 @@ if __name__ == "__main__":
     convert_tf_saved_model(
         saved_model_dir="tflite_vap",
         output_dir="tfjs_vap",
+        weight_shard_size_bytes=1024*1024*50,
     )

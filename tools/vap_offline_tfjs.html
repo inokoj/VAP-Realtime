@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- TensorFlow.js の読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+  <!-- 出力を表示するための領域 -->
+  <div id="results"></div>
+  <script>
+    // 非同期関数としてモデルのロード・推論を行う
+    async function runModel() {
+      // 1) モデルのロード（パスはご自身の環境に合わせて変更）
+      const model = await tf.loadGraphModel('tfjs_vap/model.json');
+
+      // 2) ダミーの入力テンソルを作成
+      const data_left_frame  = tf.zeros([1, 1, 1120], 'float32');
+      const data_right_frame = tf.zeros([1, 1, 1120], 'float32');
+      const e1_context       = tf.zeros([1, 99, 256], 'float32');
+      const e2_context       = tf.zeros([1, 99, 256], 'float32');
+
+      // 3) executeAsync() で推論を実行（動的制御フローを含むモデル向け）
+      //   - ここでは出力ノードの名前指定を省略し、全出力を取得します
+      const outputs = await model.executeAsync({
+        data_left_frame,
+        data_right_frame,
+        e1_context,
+        e2_context
+      });
+
+      // 4) テンソルの内容をブラウザの画面に表示
+      const resultDiv = document.getElementById('results');
+
+      // 返ってきた outputs が配列かオブジェクトかをチェック
+      if (Array.isArray(outputs)) {
+        // 配列の場合：一つずつ取り出し、要素を文字列化
+        outputs.forEach(async (tensor, i) => {
+          const data = await tensor.data();  // テンソルの値を取得 (TypedArray)
+          const p = document.createElement('p');
+          p.textContent = `Output[${i}]: ${JSON.stringify(Array.from(data))}`;
+          resultDiv.appendChild(p);
+        });
+      } else {
+        // オブジェクトの場合（key: テンソル）
+        for (const [key, tensor] of Object.entries(outputs)) {
+          const data = await tensor.data();
+          const p = document.createElement('p');
+          p.textContent = `Output[${key}]: ${JSON.stringify(Array.from(data))}`;
+          resultDiv.appendChild(p);
+        }
+      }
+    }
+
+    // 実行
+    runModel();
+  </script>
+</body>
+</html>

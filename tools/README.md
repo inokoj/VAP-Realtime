@@ -37,7 +37,7 @@ python export_vap_onnx.py \
 --cpc_encoder_feature_length 256
 ```
 
-## 3. Offline test
+## 3. ONNX offline test
 - Command prompt
 ```shell
 python vap_offline_onnx.py ^
@@ -100,3 +100,15 @@ onnx2tf>=1.26.8
 python export_vap_onnx.py \
 --vap_onnx_model ./vap_state_dict_jp_20hz_2500msec_static.onnx
 ```
+
+## 6. tfjs offline test
+Starting the HTTP Server.
+```bash
+python -m http.server 8088
+```
+Start your browser and access the following URL.
+```
+http://127.0.0.1:8088/vap_offline_tfjs.html
+```
+- Results
+![Image](https://github.com/user-attachments/assets/5a683135-4730-4d8f-aa22-160030d2ad3e)
