@@ -124,6 +124,7 @@ You can see results like:
 The explanations of the above metrics are follows:
 
 | Metric | Description |
+| --- | --- |
 | test_loss | Loss value of VAP |
 | test_loss_va | Loss value of VAD |
 | test_hs2_balanced_accuracy | Balanced accuracy of turn hold/shift prediction task defined in [Inoue 24] |
