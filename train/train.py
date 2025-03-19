@@ -257,8 +257,8 @@ def train() -> None:
         SymmetricSpeakersCallback()
     ]
 
-    if configs["model"].context_limit_cpc_sec < 0:
-        callbacks.append(AudioAugmentationCallback(device="cpu"))
+    # if configs["model"].context_limit_cpc_sec < 0:
+    #     callbacks.append(AudioAugmentationCallback(device="cpu"))
     
     if oconf.early_stopping == 1:
         print("Eearly Stopping applied")
@@ -354,8 +354,8 @@ class VAPModel(VapGPT, pl.LightningModule):
         # self.test_hs_reference = [0, 0]
         # self.test_hs_confusion_matrix = {"ref=0:pre=0": 0, "ref=0:pre=1": 0, "ref=1:pre=0": 0, "ref=1:pre=1": 0}
 
-        # self.test_hs2_reference = [0, 0]
-        # self.test_hs2_confusion_matrix = {"ref=0:pre=0": 0, "ref=0:pre=1": 0, "ref=1:pre=0": 0, "ref=1:pre=1": 0}
+        self.test_hs2_reference = [0, 0]
+        self.test_hs2_confusion_matrix = {"ref=0:pre=0": 0, "ref=0:pre=1": 0, "ref=1:pre=0": 0, "ref=1:pre=1": 0}
 
         # self.test_pred_shift2_reference = [0, 0]
         # self.test_pred_shift2_confusion_matrix = {"ref=0:pre=0": 0, "ref=0:pre=1": 0, "ref=1:pre=0": 0, "ref=1:pre=1": 0}
@@ -531,31 +531,54 @@ class VAPModel(VapGPT, pl.LightningModule):
         
         # self.log(f"{split}_lid", {"f1w": f1["lid"]}, sync_dist=True)
 
-        # if split == "test":
-        #     # hs2, sh2, bc2のBalanced accuracyを計算
-        #     # Balanced accuracy = (TPR + TNR) / 2
+        if split == "test":
+            # hs2, sh2, bc2のBalanced accuracyを計算
+            # Balanced accuracy = (TPR + TNR) / 2
 
-        #     hs2_tp = self.test_hs2_confusion_matrix['ref=1:pre=1']
-        #     hs2_fp = self.test_hs2_confusion_matrix['ref=0:pre=1']
-        #     hs2_fn = self.test_hs2_confusion_matrix['ref=1:pre=0']
-        #     hs2_tn = self.test_hs2_confusion_matrix['ref=0:pre=0']
-        #     hs2_balanced_accuracy = (hs2_tp / (hs2_tp + hs2_fn) + hs2_tn / (hs2_tn + hs2_fp)) / 2
+            hs2_tp = self.test_hs2_confusion_matrix['ref=1:pre=1']
+            hs2_fp = self.test_hs2_confusion_matrix['ref=0:pre=1']
+            hs2_fn = self.test_hs2_confusion_matrix['ref=1:pre=0']
+            hs2_tn = self.test_hs2_confusion_matrix['ref=0:pre=0']
+            if hs2_tp + hs2_fn == 0:
+                hs2_balanced_accuracy = 0
+            elif hs2_tn + hs2_fp == 0:
+                hs2_balanced_accuracy = 0
+            else:
+                hs2_balanced_accuracy = (hs2_tp / (hs2_tp + hs2_fn) + hs2_tn / (hs2_tn + hs2_fp)) / 2
 
-        #     pred_sh2_tp = self.test_pred_shift2_confusion_matrix['ref=1:pre=1']
-        #     pred_sh2_fp = self.test_pred_shift2_confusion_matrix['ref=0:pre=1']
-        #     pred_sh2_fn = self.test_pred_shift2_confusion_matrix['ref=1:pre=0']
-        #     pred_sh2_tn = self.test_pred_shift2_confusion_matrix['ref=0:pre=0']
-        #     pred_sh2_balanced_accuracy = (pred_sh2_tp / (pred_sh2_tp + pred_sh2_fn) + pred_sh2_tn / (pred_sh2_tn + pred_sh2_fp)) / 2
+            if hs2_tp + hs2_fp == 0:
+                hs2_precision = 0
+            else:
+                hs2_precision = hs2_tp / (hs2_tp + hs2_fp)
 
-        #     pred_bc2_tp = self.test_pred_backchannel2_confusion_matrix['ref=1:pre=1']
-        #     pred_bc2_fp = self.test_pred_backchannel2_confusion_matrix['ref=0:pre=1']
-        #     pred_bc2_fn = self.test_pred_backchannel2_confusion_matrix['ref=1:pre=0']
-        #     pred_bc2_tn = self.test_pred_backchannel2_confusion_matrix['ref=0:pre=0']
-        #     pred_bc2_balanced_accuracy = (pred_bc2_tp / (pred_bc2_tp + pred_bc2_fn) + pred_bc2_tn / (pred_bc2_tn + pred_bc2_fp)) / 2
+            if hs2_tp + hs2_fn == 0:
+                hs2_recall = 0
+            else:
+                hs2_recall = hs2_tp / (hs2_tp + hs2_fn)
 
-        #     self.log(f"{split}_hs2_balanced_accuracy", hs2_balanced_accuracy, sync_dist=True)
-        #     self.log(f"{split}_pred_sh2_balanced_accuracy", pred_sh2_balanced_accuracy, sync_dist=True)
-        #     self.log(f"{split}_pred_bc2_balanced_accuracy", pred_bc2_balanced_accuracy, sync_dist=True)
+            if hs2_precision + hs2_recall == 0:
+                hs2_f1 = 0
+            else:
+                hs2_f1 = 2 * hs2_precision * hs2_recall / (hs2_precision + hs2_recall)
+
+            # pred_sh2_tp = self.test_pred_shift2_confusion_matrix['ref=1:pre=1']
+            # pred_sh2_fp = self.test_pred_shift2_confusion_matrix['ref=0:pre=1']
+            # pred_sh2_fn = self.test_pred_shift2_confusion_matrix['ref=1:pre=0']
+            # pred_sh2_tn = self.test_pred_shift2_confusion_matrix['ref=0:pre=0']
+            # pred_sh2_balanced_accuracy = (pred_sh2_tp / (pred_sh2_tp + pred_sh2_fn) + pred_sh2_tn / (pred_sh2_tn + pred_sh2_fp)) / 2
+
+            # pred_bc2_tp = self.test_pred_backchannel2_confusion_matrix['ref=1:pre=1']
+            # pred_bc2_fp = self.test_pred_backchannel2_confusion_matrix['ref=0:pre=1']
+            # pred_bc2_fn = self.test_pred_backchannel2_confusion_matrix['ref=1:pre=0']
+            # pred_bc2_tn = self.test_pred_backchannel2_confusion_matrix['ref=0:pre=0']
+            # pred_bc2_balanced_accuracy = (pred_bc2_tp / (pred_bc2_tp + pred_bc2_fn) + pred_bc2_tn / (pred_bc2_tn + pred_bc2_fp)) / 2
+
+            self.log(f"{split}_hs2_balanced_accuracy", hs2_balanced_accuracy, sync_dist=True)
+            self.log(f"{split}_hs2_precision", hs2_precision, sync_dist=True)
+            self.log(f"{split}_hs2_recall", hs2_recall, sync_dist=True)
+            self.log(f"{split}_hs2_f1", hs2_f1, sync_dist=True)
+            # self.log(f"{split}_pred_sh2_balanced_accuracy", pred_sh2_balanced_accuracy, sync_dist=True)
+            # self.log(f"{split}_pred_bc2_balanced_accuracy", pred_bc2_balanced_accuracy, sync_dist=True)
 
     def shared_step(
         self, batch: Dict, reduction: str = "mean"
@@ -725,17 +748,17 @@ class VAPModel(VapGPT, pl.LightningModule):
             # print(targets['hs2'])
             # input()
 
-            # if 'hs2' in targets:
-            #     if targets['hs2'] is not None:
-            #         for r in targets['hs2']:
-            #             self.test_hs2_reference[r] += 1
+            if 'hs2' in targets:
+                if targets['hs2'] is not None:
+                    for r in targets['hs2']:
+                        self.test_hs2_reference[r] += 1
                     
-            #         for p, t in zip(preds["hs2"], targets["hs2"]):
-            #             if torch.isnan(p) or torch.isnan(t):
-            #                 continue
-            #             p_ = torch.round(p)
-            #             label = "ref=%d:pre=%d" % (t, p_)
-            #             self.test_hs2_confusion_matrix[label] += 1
+                    for p, t in zip(preds["hs2"], targets["hs2"]):
+                        if torch.isnan(p) or torch.isnan(t):
+                            continue
+                        p_ = torch.round(p)
+                        label = "ref=%d:pre=%d" % (t, p_)
+                        self.test_hs2_confusion_matrix[label] += 1
             
             # if 'hs' in targets:
             #     if targets['hs'] is not None:
@@ -780,7 +803,7 @@ class VAPModel(VapGPT, pl.LightningModule):
 
             self.metrics_step(preds, targets, split="test")
 
-    def on_validation_epoch_end(self, *_):
+    def on_test_epoch_end(self, *_):
         if hasattr(self, "test_metrics"):
             self.metrics_epoch("test")
 

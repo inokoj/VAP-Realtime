@@ -18,6 +18,8 @@ Please note that this repository and README are currently under development and 
 $ pip install -r requirements-training.txt
 ```
 
+You also need to install `sox` software to load wav audio files.
+
 ## (2) Preparation
 
 To begin, you need to create CSV files that define the training, validation, and test data.
@@ -105,4 +107,47 @@ python evaluation.py ^
     --checkpoint ./trained_data/
 ```
 
-With the current program, after the testing, you would be able to check the test loss in the file `runs_evaluation/score.csv`.
+You can see results like:
+```
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric         ┃        DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ test_hs2_balanced_accuracy │           XXXXX            │
+│        test_hs2_f1         │           XXXXX            │
+│     test_hs2_precision     │           XXXXX            │
+│      test_hs2_recall       │           XXXXX            │
+│         test_loss          │           XXXXX            │
+│        test_loss_va        │           XXXXX            │
+└────────────────────────────┴────────────────────────────┘
+```
+
+The explanations of the above metrics are follows:
+
+| Metric | Description |
+| test_loss | Loss value of VAP |
+| test_loss_va | Loss value of VAD |
+| test_hs2_balanced_accuracy | Balanced accuracy of turn hold/shift prediction task defined in [Inoue 24] |
+| test_hs2_f1 | f1 score of of turn hold/shift prediction task |
+| test_hs2_precision | precision score of of turn hold/shift prediction task |
+| test_hs2_recall | recall score of of turn hold/shift prediction task |
+
+With the current program, after the testing, you would be able to check the above metrics in the file `runs_evaluation/score.csv`.
+
+
+## Reference
+
+Koji Inoue, Bing'er Jiang, Erik Ekstedt, Tatsuya Kawahara, Gabriel Skantze<br>
+__Multilingual Turn-taking Prediction Using Voice Activity Projection__<br>
+Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING), pages 11873-11883, 2024<br>
+https://aclanthology.org/2024.lrec-main.1036/<br>
+
+```
+@inproceedings{inoue2024lreccoling,
+    author = {Koji Inoue and Bing'er Jiang and Erik Ekstedt and Tatsuya Kawahara and Gabriel Skantze},
+    title = {Multilingual Turn-taking Prediction Using Voice Activity Projection},
+    booktitle = {Proceedings of the Joint International Conference on Computational Linguistics and Language Resources and Evaluation (LREC-COLING)},
+    pages = {11873--11883},
+    year = {2024},
+    url = {https://aclanthology.org/2024.lrec-main.1036/},
+}
+```
