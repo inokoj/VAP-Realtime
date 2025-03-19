@@ -128,9 +128,9 @@ The explanations of the above metrics are follows:
 | test_loss | Loss value of VAP |
 | test_loss_va | Loss value of VAD |
 | test_hs2_balanced_accuracy | Balanced accuracy of turn hold/shift prediction task defined in [Inoue 24] |
-| test_hs2_f1 | f1 score of of turn hold/shift prediction task |
-| test_hs2_precision | precision score of of turn hold/shift prediction task |
-| test_hs2_recall | recall score of of turn hold/shift prediction task |
+| test_hs2_f1 | F1 score of of turn hold/shift prediction task |
+| test_hs2_precision | Precision score of of turn hold/shift prediction task |
+| test_hs2_recall | Recall score of of turn hold/shift prediction task |
 
 With the current program, after the testing, you would be able to check the above metrics in the file `runs_evaluation/score.csv`.
 
