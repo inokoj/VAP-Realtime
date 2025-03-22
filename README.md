@@ -308,6 +308,17 @@ Multi-lingual model (for English, Mandarin Chinese, and Japanese, trained using 
 | `asset/vap/vap_state_dict_tri_ecj_10hz_5000msec.pt` | 5 | 5 |
 | `asset/vap/vap_state_dict_tri_ecj_10hz_3000msec.pt` | 5 | 3 |
 
+### Noise-Robusst VAP
+
+We also trained noise-robust VAP models suitable for applications such as robot dialogues.
+Various types of noise were added to the training data, and the audio gain was randomly adjusted to simulate diverse deployment conditions.
+For further details, please refer to [Inoue 2025](https://www.arxiv.org/abs/2503.06241).
+
+Japanese model (trained using a Zoom meeting dialogue from [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) and our in-house data)
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_jp_10hz_5000msec_MC.pt` | 10 | 5 |
+
 ### Backchannel prediction VAP
 
 Japanese backchannel model (fine-tuned with an attentive listening dialogue data using ERICA (WoZ))
@@ -362,6 +373,22 @@ https://aclanthology.org/2024.lrec-main.1036/<br>
     pages = {11873--11883},
     year = {2024},
     url = {https://aclanthology.org/2024.lrec-main.1036/},
+}
+```
+
+If you also use the noise-robusst VAP model, please also cite the following paper.
+
+Koji Inoue, Yuki Okafuji, Jun Baba, Yoshiki Ohira, Katsuya Hyodo, Tatsuya Kawahara<br>
+__A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Experiment__<br>
+https://www.arxiv.org/abs/2503.06241<br>
+
+```
+@misc{inoue2024lreccoling,
+    author = {Koji Inoue and Yuki Okafuji and Jun Baba and Yoshiki Ohira and Katsuya Hyodo and Tatsuya Kawahara},
+    title = {A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Experiment},
+    year = {2025},
+    note = {arXiv:2503.06241},
+    url = {https://www.arxiv.org/abs/2503.06241},
 }
 ```
 
