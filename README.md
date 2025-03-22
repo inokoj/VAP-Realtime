@@ -383,7 +383,7 @@ __A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Expe
 https://www.arxiv.org/abs/2503.06241<br>
 
 ```
-@misc{inoue2024lreccoling,
+@misc{inoue2025noisevap,
     author = {Koji Inoue and Yuki Okafuji and Jun Baba and Yoshiki Ohira and Katsuya Hyodo and Tatsuya Kawahara},
     title = {A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Experiment},
     year = {2025},

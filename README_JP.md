@@ -306,6 +306,17 @@ $ python vap_bc_main.py ^
 | `asset/vap/vap_state_dict_tri_ecj_10hz_5000msec.pt` | 5 | 5 |
 | `asset/vap/vap_state_dict_tri_ecj_10hz_3000msec.pt` | 5 | 3 |
 
+### ノイズ対応VAP
+
+ロボットとの対話などの用途に適した、ノイズ耐性を持つVAPモデルの学習も行いました。
+学習データにはさまざまな種類のノイズを追加し、さらにオーディオゲインをランダムに調整することで、さまざまな使用環境をシミュレートしています。
+詳細については、[Inoue 2025](https://www.arxiv.org/abs/2503.06241)をご覧ください。
+
+日本語モデル ([旅行代理店対話 (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/) の Zoom 会議の対話と独自対話データを用いて学習された日本語モデル)
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_jp_10hz_5000msec_MC.pt` | 10 | 5 |
+
 ### 相槌予測VAP
 
 日本語相槌モデル (ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル)
@@ -360,6 +371,22 @@ https://aclanthology.org/2024.lrec-main.1036/<br>
     pages = {11873--11883},
     year = {2024},
     url = {https://aclanthology.org/2024.lrec-main.1036/},
+}
+```
+
+ノイズ対応VAPモデルを使用する場合は、以下の論文も引用してください。
+
+Koji Inoue, Yuki Okafuji, Jun Baba, Yoshiki Ohira, Katsuya Hyodo, Tatsuya Kawahara<br>
+__A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Experiment__<br>
+https://www.arxiv.org/abs/2503.06241<br>
+
+```
+@misc{inoue2025noisevap,
+    author = {Koji Inoue and Yuki Okafuji and Jun Baba and Yoshiki Ohira and Katsuya Hyodo and Tatsuya Kawahara},
+    title = {A Noise-Robust Turn-Taking System for Real-World Dialogue Robots: A Field Experiment},
+    year = {2025},
+    note = {arXiv:2503.06241},
+    url = {https://www.arxiv.org/abs/2503.06241},
 }
 ```
 
