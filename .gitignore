@@ -1,12 +1,12 @@
 
-/common/__pycache__
-/vap_main/__pycache__
 vap_main/output_offline.txt
 /rvap.egg-info
-/rvap/common/__pycache__
-/rvap/vap_main/__pycache__
-/rvap/vap_bc/__pycache__
 all.bat
 *.bat
-/train/__pycache__
 /train/lightning_logs
+*.onnx
+.vscode/
+tools/output_offline.txt
+__pycache__/
+tflite_vap/
+tfjs_vap/
