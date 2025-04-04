@@ -319,6 +319,16 @@ Japanese model (trained using a Zoom meeting dialogue from [Travel agency dialog
 | --- | --- | --- |
 | `asset/vap/vap_state_dict_jp_10hz_5000msec_MC.pt` | 10 | 5 |
 
+English model (trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_eng_10hz_5000msec_MC.pt` | 10 | 5 |
+
+Multi-lingual model (for English, Mandarin Chinese, and Japanese, trained using [Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62), [HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15), and [Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_tri_10hz_5000msec_MC.pt`  | 10 | 5 |
+
 ### Backchannel prediction VAP
 
 Japanese backchannel model (fine-tuned with an attentive listening dialogue data using ERICA (WoZ))

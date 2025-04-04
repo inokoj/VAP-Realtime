@@ -317,6 +317,16 @@ $ python vap_bc_main.py ^
 | --- | --- | --- |
 | `asset/vap/vap_state_dict_jp_10hz_5000msec_MC.pt` | 10 | 5 |
 
+英語モデル ([Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S62) を使用してトレーニングされた英語モデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_eng_10hz_5000msec_MC.pt` | 10 | 5 |
+
+マルチリンガルモデル ([Switchboard corpus](https://catalog.ldc.upenn.edu/LDC97S 62）、[HKUST Mandarin Telephone Speech](https://catalog.ldc.upenn.edu/LDC2005S15)、[Travel agency dialogue (Inaba 2022)](https://aclanthology.org/2022.lrec-1.619/)を使用してトレーニングされた、英語、中国語、日本語のマルチリンガルモデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap/vap_state_dict_tri_10hz_5000msec_MC.pt` | 10 | 5 |
+
 ### 相槌予測VAP
 
 日本語相槌モデル (ERICAの傾聴対話データ（WoZ）でファインチューニングされた相槌予測モデル)
