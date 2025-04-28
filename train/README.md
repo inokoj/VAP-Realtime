@@ -15,7 +15,7 @@ Please note that this repository and README are currently under development and 
 ## (1) Install
 
 ```bash
-$ pip install -r requirements-training.txt
+$ pip install -r requirements-train.txt
 ```
 
 You also need to install `sox` software to load wav audio files.
