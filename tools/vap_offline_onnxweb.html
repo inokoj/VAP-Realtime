@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ONNXRuntime-web Warm-up Example</title>
+  <!-- onnxruntime-web の読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+</head>
+<body>
+  <h1>ONNXRuntime Web Warm-up & Average Time</h1>
+
+  <!-- 推論結果や計測結果を表示するためのエリア -->
+  <div id="results"></div>
+
+  <script>
+    async function runOnnxModel() {
+      const resultDiv = document.getElementById('results');
+
+      // 1) ONNX Runtime Web のセッションを作成
+      //    (パスは適宜変更してください)
+      const session = await ort.InferenceSession.create('vap_state_dict_jp_20hz_2500msec_static.onnx');
+
+      // 2) ダミー入力(0埋め)の Float32Array を作成
+      //    [1,1,1120], [1,1,1120], [1,99,256], [1,99,256] の各配列
+      const dataLeftArray  = new Float32Array(1 * 1 * 1120);
+      const dataRightArray = new Float32Array(1 * 1 * 1120);
+      const e1ContextArray = new Float32Array(1 * 99 * 256);
+      const e2ContextArray = new Float32Array(1 * 99 * 256);
+      dataLeftArray.fill(0);
+      dataRightArray.fill(0);
+      e1ContextArray.fill(0);
+      e2ContextArray.fill(0);
+
+      // 3) onnxruntime-web 用に Tensor を生成
+      const feeds = {
+        data_left_frame: new ort.Tensor('float32', dataLeftArray,  [1, 1, 1120]),
+        data_right_frame: new ort.Tensor('float32', dataRightArray, [1, 1, 1120]),
+        e1_context: new ort.Tensor('float32', e1ContextArray,       [1, 99, 256]),
+        e2_context: new ort.Tensor('float32', e2ContextArray,       [1, 99, 256])
+      };
+
+      // ----------------------------------------------------------------
+      //   ウォームアップ：初回推論 (1回だけ実行、計測しない)
+      // ----------------------------------------------------------------
+      await session.run(feeds);
+
+      // ----------------------------------------------------------------
+      //   2回目以降の推論を 10 回行い、毎回の推論時間を計測
+      // ----------------------------------------------------------------
+      const numRuns = 10;
+      let totalTime = 0;
+
+      for (let i = 0; i < numRuns; i++) {
+        const startTime = performance.now();
+        const results = await session.run(feeds);
+        const endTime = performance.now();
+
+        const elapsed = endTime - startTime;
+        totalTime += elapsed;
+
+        // 画面に各回の推論時間を表示（i+2 は "2回目" から始まる表記のため）
+        const p = document.createElement('p');
+        p.textContent = `Inference ${i + 1} : ${elapsed.toFixed(2)} ms`;
+        resultDiv.appendChild(p);
+      }
+
+      // ----------------------------------------------------------------
+      //   2回目以降 (合計10回) の平均推論時間を表示
+      // ----------------------------------------------------------------
+      const avgTime = totalTime / numRuns;
+      const avgP = document.createElement('p');
+      avgP.textContent = `Avg time (1～${numRuns}): ${avgTime.toFixed(2)} ms`;
+      resultDiv.appendChild(avgP);
+    }
+
+    // ページ読み込み時に実行
+    runOnnxModel();
+  </script>
+</body>
+</html>
