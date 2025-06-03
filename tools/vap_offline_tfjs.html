@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TFJS 10-run Time Measurement</title>
+  <!-- TensorFlow.js の読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+  <h1>TensorFlow.js 10-run Time Measurement</h1>
+
+  <!-- 推論結果や計測結果を表示するためのエリア -->
+  <div id="results"></div>
+
+  <script>
+    // 非同期処理でモデルをロードし、推論を実行する
+    async function runModel() {
+      const resultDiv = document.getElementById('results');
+
+      // 1) tfjs_vap/model.json からモデルをロード
+      //    (必要に応じてパスを調整してください)
+      const modelUrl = 'tfjs_vap/model.json';
+      const model = await tf.loadGraphModel(modelUrl);
+
+      // 2) ダミー入力を作成
+      //    質問文にある形状に合わせて float32 テンソルを作る
+      const data_left_frame  = tf.zeros([1, 1, 1120], 'float32');
+      const data_right_frame = tf.zeros([1, 1, 1120], 'float32');
+      const e1_context       = tf.zeros([1, 99, 256], 'float32');
+      const e2_context       = tf.zeros([1, 99, 256], 'float32');
+
+      // ウォームアップ
+      await model.executeAsync({
+        data_left_frame,
+        data_right_frame,
+        e1_context,
+        e2_context
+      });
+
+      // 3) 10回推論を行い、毎回の処理時間を計測
+      let totalTime = 0;
+      const numRuns = 10;
+
+      for (let i = 0; i < numRuns; i++) {
+        // 計測開始時刻
+        const startTime = performance.now();
+
+        // 動的制御フローを含むモデルの可能性があるので、executeAsync() を使用
+        // すべての出力をまとめて取得 (必要に応じて出力ノード名を配列指定してもOK)
+        const outputs = await model.executeAsync({
+          data_left_frame,
+          data_right_frame,
+          e1_context,
+          e2_context
+        });
+
+        // 計測終了時刻
+        const endTime = performance.now();
+        const elapsed = endTime - startTime;
+        totalTime += elapsed;
+
+        // 4) 1回ごとの推論時間を画面に表示
+        const pTime = document.createElement('p');
+        pTime.textContent = `Inference ${i + 1} : ${elapsed.toFixed(2)} ms`;
+        resultDiv.appendChild(pTime);
+
+        // 必要があれば、outputsの中身を画面出力する例
+        // （大量の数値が表示されるので、通常はコメントアウト推奨）
+        if (Array.isArray(outputs)) {
+          outputs.forEach((tensor, idx) => {
+            tensor.data().then(dataArr => {
+              const pData = document.createElement('p');
+              pData.textContent = `Output[${idx}]: ${JSON.stringify(Array.from(dataArr))}`;
+              resultDiv.appendChild(pData);
+            });
+          });
+        } else {
+          for (const [key, tensor] of Object.entries(outputs)) {
+            tensor.data().then(dataArr => {
+              const pData = document.createElement('p');
+              pData.textContent = `Output[${key}]: ${JSON.stringify(Array.from(dataArr))}`;
+              resultDiv.appendChild(pData);
+            });
+          }
+        }
+      }
+
+      // 5) 10回推論の平均処理時間を表示
+      const averageTime = totalTime / numRuns;
+      const pAvg = document.createElement('p');
+      pAvg.textContent = `Avg time: ${averageTime.toFixed(2)} ms`;
+      resultDiv.appendChild(pAvg);
+    }
+
+    // ページ読み込み時に実行
+    runModel();
+  </script>
+</body>
+</html>
