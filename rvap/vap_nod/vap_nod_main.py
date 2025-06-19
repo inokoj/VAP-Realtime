@@ -6,9 +6,9 @@ from torch import Tensor
 from dataclasses import dataclass, field
 from typing import Dict, Tuple, List, Optional
 
-from rvap.vap_bc.encoder import EncoderCPC
-from rvap.vap_bc.modules import GPT, GPTStereo
-from rvap.vap_bc.objective import ObjectiveVAP
+from rvap.vap_nod.encoder import EncoderCPC
+from rvap.vap_nod.modules import GPT, GPTStereo
+from rvap.vap_nod.objective import ObjectiveVAP
 
 # from wav import WavLoadForVAP
 import time
@@ -133,10 +133,9 @@ class VapGPT(nn.Module):
         
         self.vap_head = nn.Linear(conf.dim, self.objective.n_classes)
 
-        # For Backchannel
-        self.bc_head = nn.Linear(conf.dim, 3)
-        # self.bc_head_react = nn.Linear(conf.dim, 1)
-        # self.bc_head_emo = nn.Linear(conf.dim, 1)
+        # For Nodding
+        self.nod_head = nn.Linear(conf.dim, 4)
+        self.bc_head = nn.Linear(conf.dim, 1)
 
     def load_encoder(self, cpc_model):
         
@@ -226,8 +225,10 @@ class VAPRealTime():
         self.current_x1_audio = []
         self.current_x2_audio = []
         
-        self.result_p_bc_react = 0.
-        self.result_p_bc_emo = 0.
+        self.result_p_bc = 0.
+        self.result_p_nod_short = 0.
+        self.result_p_nod_long = 0.
+        self.result_p_nod_long_p = 0.
         self.result_last_time = -1
 
         self.process_time_abs = -1
@@ -269,19 +270,24 @@ class VAPRealTime():
             out = self.vap.ar(o1["x"], o2["x"], attention=False)
 
             # Outputs
-            bc = self.vap.bc_head(out["x"])
-            # bc_react = self.vap.bc_head_react(out["x"])
-            # bc_emo = self.vap.bc_head_emo(out["x"])
+            p_bc = self.vap.bc_head(out["x"])
+            nod = self.vap.nod_head(out["x"])
             
-            p_bc_react = bc.softmax(dim=-1)[:, -1, 1]
-            p_bc_emo = bc.softmax(dim=-1)[:, -1, 2]
+            p_bc = p_bc.sigmoid()[-1]
+            p_nod_short = nod.softmax(dim=-1)[:, -1, 1]
+            p_nod_long = nod.softmax(dim=-1)[:, -1, 2]
+            p_nod_long_p = nod.softmax(dim=-1)[:, -1, 3]
             
             # Get back to the CPU
-            p_bc_react = p_bc_react.to('cpu')
-            p_bc_emo = p_bc_emo.to('cpu')
+            p_bc = p_bc.to('cpu')
+            p_nod_short = p_nod_short.to('cpu')
+            p_nod_long = p_nod_long.to('cpu')
+            p_nod_long_p = p_nod_long_p.to('cpu')
             
-            self.result_p_bc_react = [p_bc_react]#.tolist()[0][-1]
-            self.result_p_bc_emo = [p_bc_emo]#.tolist()[0][-1]
+            self.result_p_bc = p_bc#.tolist()[0][-1]
+            self.result_p_nod_short = [p_nod_short]#.tolist()[0][-1]
+            self.result_p_nod_long = [p_nod_long]#.tolist()[0][-1]
+            self.result_p_nod_long_p = [p_nod_long_p]#.tolist()[0][-1]
             self.result_last_time = time.time()
             
             time_process = time.time() - time_start
@@ -389,16 +395,19 @@ def proc_serv_out_dist(list_socket_out, vap):
         t = copy.copy(vap.result_last_time)
         x1 = copy.copy(vap.current_x1_audio)
         x2 = copy.copy(vap.current_x2_audio)
-        p_bc_react = copy.copy(vap.result_p_bc_react)
-        p_bc_emo = copy.copy(vap.result_p_bc_emo)
+        p_bc = copy.copy(vap.result_p_bc)
+        p_nod_short = copy.copy(vap.result_p_nod_short)
+        p_nod_long = copy.copy(vap.result_p_nod_long)
+        p_nod_long_p = copy.copy(vap.result_p_nod_long_p)
         
         vap_result = {
-            "t": t,
-            "x1": x1, "x2": x2,
-            "p_bc_react": p_bc_react, "p_bc_emo": p_bc_emo
-        }
+			"t": t,
+			"x1": x1, "x2": x2,
+			"p_bc": p_bc,
+			"p_nod_short": p_nod_short, "p_nod_long": p_nod_long, "p_nod_long_p": p_nod_long_p
+		}
         
-        data_sent = util.conv_vapresult_2_bytearray_bc(vap_result)
+        data_sent = util.conv_vapresult_2_bytearray_nod(vap_result)
         sent_size = len(data_sent)
         data_sent_all = sent_size.to_bytes(4, 'little') + data_sent
         
@@ -416,12 +425,12 @@ if __name__ == "__main__":
     
     # Argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--vap_model", type=str, default='../../asset/vap_bc/vap-bc_state_dict_erica_10hz_5000msec.pt')
+    parser.add_argument("--vap_model", type=str, default='../../asset/vap_nod/vap-nod_state_dict_erica_10hz_10000msec.pt')
     parser.add_argument("--cpc_model", type=str, default='../../asset/cpc/60k_epoch4-d0f474de.pt')
     parser.add_argument("--port_num_in", type=int, default=50007)
     parser.add_argument("--port_num_out", type=int, default=50008)
     parser.add_argument("--vap_process_rate", type=int, default=10)
-    parser.add_argument("--context_len_sec", type=float, default=5)
+    parser.add_argument("--context_len_sec", type=float, default=10)
     parser.add_argument("--gpu", action='store_true')
     args = parser.parse_args()
     

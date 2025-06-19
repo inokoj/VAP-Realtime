@@ -4,7 +4,7 @@ import einops
 import os
 import numpy as np
 
-from rvap.vap_bc.encoder_components import load_CPC, get_cnn_layer
+from rvap.vap_nod.encoder_components import load_CPC, get_cnn_layer
 
 import time
 
