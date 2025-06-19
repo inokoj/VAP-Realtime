@@ -210,6 +210,32 @@ def conv_vapresult_2_bytearray_bc(vap_result):
     
     return b
 
+def conv_vapresult_2_bytearray_nod(vap_result):
+    
+    b = b''
+    #print(type(vap_result['t']))
+    b += struct.pack('<d', vap_result['t'])
+    
+    b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x1'])
+    
+    b += len(vap_result['x2']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x2'])
+    
+    b += len(vap_result['p_bc']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_bc'])
+
+    b += len(vap_result['p_nod_short']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_short'])
+    
+    b += len(vap_result['p_nod_long']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_long'])
+    
+    b += len(vap_result['p_nod_long_p']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_long_p'])
+    
+    return b
+
 #
 # Byte -> VAP result
 #
@@ -244,6 +270,53 @@ def conv_bytearray_2_vapresult_bc(barr):
         'x2': x2,
         'p_bc_react': p_bc_react,
         'p_bc_emo': p_bc_emo
+    }
+    
+    return result_vap
+
+def conv_bytearray_2_vapresult_nod(barr):
+    
+    idx = 0
+    t = struct.unpack('<d', barr[idx:8])[0]
+    idx += 8
+    
+    len_x1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x1])
+    idx += 8*len_x1
+    
+    len_x2 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x2])
+    idx += 8*len_x2
+    
+    len_p_bc = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_bc = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_bc])
+    idx += 8*len_p_bc
+    
+    len_p_nod_short = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_short = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_short])
+    idx += 8*len_p_nod_short
+    
+    len_p_nod_long = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_long = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_long])
+    idx += 8*len_p_nod_long
+    
+    len_p_nod_long_p = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_long_p = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_long_p])
+
+    result_vap = {
+        't': t,
+        'x1': x1,
+        'x2': x2,
+        'p_bc': p_bc,
+        'p_nod_short': p_nod_short,
+        'p_nod_long': p_nod_long,
+        'p_nod_long_p': p_nod_long_p
     }
     
     return result_vap

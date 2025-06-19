@@ -31,6 +31,7 @@ __Demo video on YouTube__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 - __rvap__
   - __vap_main__ - VAP main directory
   - __vap_bc__ - VAP main directory for backchannel prediction
+  - __vap_nod__ - VAP main directory for nodding prediction
   - __common__ - Utility programs for the VAP process, like how to encode and decode data for communication
 - __input__ - Sample programs for input function
 - __output__ - SAmple programs for output function
@@ -272,6 +273,30 @@ Also, note that while the model input consists of 2-channel audio, it predicts t
 
 The sample programs for visualization are `output/console_bc.py` and `output/gui_bc.py`.
 
+## Nodding prediction
+
+Additionally, there is a fine-tuned model available for nodding prediction (generation).
+Please use the following main program:
+
+```bash
+$ cd rvap/vap_nod
+
+$ python vap_nod_main.py ^
+    --vap_model ../../asset/vap_nod/vap-nod_state_dict_erica_10hz_10000msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --port_num_in 50007 ^
+    --port_num_out 50008 ^
+    --vap_process_rate 10 ^
+    --context_len_sec 10
+```
+
+The input/output format is the same, but the output `p_now` and `p_future` are replaced with `p_nod_short`, `p_nod_long` and `p_nod_long_p`.
+`p_nod_short` represents the probability of occurrence of short nodding. `p_nod_long` and `p_nod_long_p` represents the probability of occurrence of long nodding without/with swinging up, respectively.
+This model predicts the probability of noddings occurring 500 milliseconds later.
+Also, note that while the model input consists of 2-channel audio, it predicts the noddings of the speaker on the first channel, meaning the second channel corresponds to the user's voice.
+
+The sample programs for visualization are `output/console_nod.py` and `output/gui_nod.py`.
+
 ## Model
 
 This repository contains several models for VAP and CPC. To use these models, please abide by the [lisence](#lisence).
@@ -340,6 +365,21 @@ Japanese backchannel model (fine-tuned with an attentive listening dialogue data
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
+
+### Nodding prediction VAP
+
+Japanese nodding model (fine-tuned with an attentive listening dialogue data using ERICA (WoZ))
+| Location | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_10000msec.pt` | 20 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_5000msec.pt` | 20 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_3000msec.pt` | 20 | 3 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_10000msec.pt` | 10 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_10000msec.pt` | 5 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
 
 ### CPC
 

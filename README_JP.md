@@ -29,7 +29,8 @@ __デモ動画（YouTube）__ (https://www.youtube.com/watch?v=-uwB6yl2WtI)
 
 - __rvap__
   - __vap_main__ - VAPメインディレクトリ
-  - __vap_main__ - 相槌予測用VAPのメインディレクトリ
+  - __vap_bc__ - 相槌予測用VAPのメインディレクトリ
+  - __vap_nod__ - 頷き予測用VAPのメインディレクトリ
   - __common__ - 通信用のデータのエンコードとデコード方法など
 - __input__ - 入力用サンプルプログラム
 - __output__ - 出力用サンプルプログラム
@@ -270,6 +271,30 @@ $ python vap_bc_main.py ^
 
 可視化のサンプルプログラムは`output/console_bc.py`や`output/gui_bc.py`です。
 
+## 頷き予測
+
+さらに、頷き予測（生成）用にファインチューニングされたモデルもあります。
+以下のメインプログラムを使用してください。
+
+```bash
+$ cd rvap/vap_nod
+
+$ python vap_nod_main.py ^
+    --vap_model ../../asset/vap_nod/vap-nod_state_dict_erica_10hz_10000msec.pt ^
+    --cpc_model ../../asset/cpc/60k_epoch4-d0f474de.pt ^
+    --port_num_in 50007 ^
+    --port_num_out 50008 ^
+    --vap_process_rate 10 ^
+    --context_len_sec 10
+```
+
+入出力のフォーマットは同じで、出力の`p_now`と`p_future`がそれぞれ`p_nod_short`、`p_nod_long`、`p_nod_long_p`に置き換わります。
+`p_nod_short`は移動範囲が小さい頷きを表し、`p_nod_long`と`p_nod_long_p`はそれぞれ移動範囲が大きく、振り上げがない/ある頷きの生起確率を表します。
+このモデルは500ミリ秒後の頷きの生起確率を予測するものです。
+また、モデルの入力は2チャンネルの音声ですが、1チャンネル目の話者の頷きを予測する、つまり2チャンネル目がユーザの音声に対応することに注意してください。
+
+可視化のサンプルプログラムは`output/console_nod.py`や`output/gui_nod.py`です。
+
 ## モデル
 
 このリポジトリには、VAPとCPCのモデルがいくつか含まれています。これらのモデルを使用する場合は、[ライセンス](#lisence)に従ってください。
@@ -338,6 +363,21 @@ $ python vap_bc_main.py ^
 | `asset/vap-bc/vap-bc_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
 | `asset/vap-bc/vap-bc_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
+
+### 頷き予測VAP
+
+日本語頷きモデル (ERICAの傾聴対話データ（WoZ）でファインチューニングされた頷き予測モデル)
+| 配置場所 | `vap_process_rate` | `context_len_sec` |
+| --- | --- | --- |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_10000msec.pt` | 20 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_5000msec.pt` | 20 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_20hz_3000msec.pt` | 20 | 3 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_10000msec.pt` | 10 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_5000msec.pt` | 10 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_10hz_3000msec.pt` | 10 | 3 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_10000msec.pt` | 5 | 10 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_5000msec.pt` | 5 | 5 |
+| `asset/vap-nod/vap-nod_state_dict_erica_5hz_3000msec.pt` | 5 | 3 |
 
 ### CPC
 
