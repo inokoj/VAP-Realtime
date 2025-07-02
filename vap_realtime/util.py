@@ -1,0 +1,329 @@
+import torch
+import importlib.resources
+
+def load_vap_model(mode: str, frame_rate: int, context_len_sec: float, device: str = "cuda"):
+    
+    if mode == "vap":
+        package_path = "vap_realtime.data.asset.vap"
+        file_path = f"vap_state_dict_jp_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+    elif mode == "bc":
+        package_path = "vap_realtime.data.asset.vap_bc"
+        file_path = f"vap-bc_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+    elif mode == "nod":
+        package_path = "vap_realtime.data.asset.vap_nod"
+        file_path = f"vap-nod_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+    else:
+        raise ValueError(f"Invalid mode: {mode}")
+    
+    with importlib.resources.path(package_path, file_path) as model_path:
+        sd = torch.load(model_path, map_location=torch.device(device))
+    return sd
+
+import struct
+
+BYTE_ORDER = 'little'
+
+#
+# Int16 -> Byte
+#
+
+def conv_2int16_2_byte(val1, val2):
+    
+    b1 = val1.to_bytes(2, BYTE_ORDER)
+    b2 = val2.to_bytes(2, BYTE_ORDER)
+    
+    # print(b1)
+    # print(b2)
+    # concatenate two bytes
+    b = b1 + b2
+    
+    #print(b)
+    
+    return b
+
+def conv_2int16array_2_bytearray(arr1, arr2):
+    
+    if len(arr1) != len(arr2):
+        raise ValueError('Two arrays must have the same length')
+    
+    b = b''
+    
+    for i in range(len(arr1)):
+        b += conv_2int16_2_byte(int(arr1[i]), int(arr2[i]))
+    
+    return b
+
+#
+# Float32 -> Byte
+#
+
+def conv_2float_2_byte(val1, val2):
+    
+    b1 = struct.pack('<d', val1)
+    b2 = struct.pack('<d', val2)
+    
+    b = b1 + b2
+    
+    return b
+
+def conv_2floatarray_2_bytearray(arr1, arr2):
+    
+    if len(arr1) != len(arr2):
+        raise ValueError('Two arrays must have the same length')
+    
+    b = b''
+    
+    for i in range(len(arr1)):
+        b += conv_2float_2_byte(arr1[i], arr2[i])
+    
+    return b
+
+def conv_float32_2_byte(val1, val2):
+    
+    b1 = struct.pack('<d', val1)
+    b2 = struct.pack('<d', val2)
+
+    b = b1 + b2
+    
+    return b
+
+def conv_floatarray_2_byte(arr):
+    
+    b = b''
+    
+    for i in range(len(arr)):
+        b += struct.pack('<d', arr[i])
+    
+    return b
+
+#
+# Byte -> Float32
+#
+
+def conv_byte_2_2float(b1, b2):
+    
+    val1 = struct.unpack('<d', b1)[0]
+    val2 = struct.unpack('<d', b2)[0]
+    
+    return val1, val2
+
+def conv_bytearray_2_2floatarray(barr):
+    
+    arr1, arr2 = [], []
+    
+    for i in range(0, len(barr), 16):
+        b1 = barr[i:i+8]
+        b2 = barr[i+8:i+16]
+        
+        val1, val2 = conv_byte_2_2float(b1, b2)
+        
+        arr1.append(val1)
+        arr2.append(val2)
+        
+    return arr1, arr2
+
+def conv_bytearray_2_floatarray(barr):
+    
+    arr = []
+    
+    for i in range(0, len(barr), 8):
+        b = barr[i:i+8]
+        val = struct.unpack('<d', b)[0]
+        arr.append(val)
+        
+    return arr
+
+#
+# VAP result -> Byte
+#
+def conv_vapresult_2_bytearray(vap_result):
+    
+    b = b''
+    #print(type(vap_result['t']))
+    b += struct.pack('<d', vap_result['t'])
+    
+    b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x1'])
+    
+    b += len(vap_result['x2']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x2'])
+    
+    b += len(vap_result['p_now']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_now'])
+
+    b += len(vap_result['p_future']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_future'])
+    
+    return b
+
+#
+# Byte -> VAP result
+#
+def conv_bytearray_2_vapresult(barr):
+    
+    idx = 0
+    t = struct.unpack('<d', barr[idx:8])[0]
+    idx += 8
+    
+    len_x1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x1])
+    idx += 8*len_x1
+    
+    len_x2 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x2])
+    idx += 8 * len_x2
+    
+    len_p_now = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_now = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_now])
+    idx += 8*len_p_now
+    
+    len_p_future = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_future = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_future])
+
+    result_vap = {
+        't': t,
+        'x1': x1,
+        'x2': x2,
+        'p_now': p_now,
+        'p_future': p_future
+    }
+    
+    return result_vap
+
+#
+# VAP result -> Byte
+#
+def conv_vapresult_2_bytearray_bc(vap_result):
+    
+    b = b''
+    #print(type(vap_result['t']))
+    b += struct.pack('<d', vap_result['t'])
+    
+    b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x1'])
+    
+    b += len(vap_result['x2']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x2'])
+    
+    b += len(vap_result['p_nod_short']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_short'])
+
+    b += len(vap_result['p_nod_long']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_long'])
+    
+    return b
+
+def conv_vapresult_2_bytearray_nod(vap_result):
+    
+    b = b''
+    #print(type(vap_result['t']))
+    b += struct.pack('<d', vap_result['t'])
+    
+    b += len(vap_result['x1']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x1'])
+    
+    b += len(vap_result['x2']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['x2'])
+    
+    b += len(vap_result['p_bc']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_bc'])
+
+    b += len(vap_result['p_nod_short']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_short'])
+    
+    b += len(vap_result['p_nod_long']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_long'])
+    
+    b += len(vap_result['p_nod_long_p']).to_bytes(4, BYTE_ORDER)
+    b += conv_floatarray_2_byte(vap_result['p_nod_long_p'])
+    
+    return b
+
+#
+# Byte -> VAP result
+#
+def conv_bytearray_2_vapresult_bc(barr):
+    
+    idx = 0
+    t = struct.unpack('<d', barr[idx:8])[0]
+    idx += 8
+    
+    len_x1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x1])
+    idx += 8*len_x1
+    
+    len_x2 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x2])
+    idx += 8 * len_x2
+    
+    len_p_nod_short = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_short = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_short])
+    idx += 8*len_p_nod_short
+    
+    len_p_nod_long = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_long = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_long])
+
+    result_vap = {
+        't': t,
+        'x1': x1,
+        'x2': x2,
+        'p_bc_react': p_nod_short,
+        'p_bc_emo': p_nod_long
+    }
+    
+    return result_vap
+
+def conv_bytearray_2_vapresult_nod(barr):
+    
+    idx = 0
+    t = struct.unpack('<d', barr[idx:8])[0]
+    idx += 8
+    
+    len_x1 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x1 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x1])
+    idx += 8*len_x1
+    
+    len_x2 = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    x2 = conv_bytearray_2_floatarray(barr[idx:idx+8*len_x2])
+    idx += 8*len_x2
+    
+    len_p_bc = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_bc = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_bc])
+    idx += 8*len_p_bc
+    
+    len_p_nod_short = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_short = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_short])
+    idx += 8*len_p_nod_short
+    
+    len_p_nod_long = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_long = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_long])
+    idx += 8*len_p_nod_long
+    
+    len_p_nod_long_p = struct.unpack('<I', barr[idx:idx+4])[0]
+    idx += 4
+    p_nod_long_p = conv_bytearray_2_floatarray(barr[idx:idx+8*len_p_nod_long_p])
+
+    result_vap = {
+        't': t,
+        'x1': x1,
+        'x2': x2,
+        'p_bc': p_bc,
+        'p_nod_short': p_nod_short,
+        'p_nod_long': p_nod_long,
+        'p_nod_long_p': p_nod_long_p
+    }
+    
+    return result_vap
