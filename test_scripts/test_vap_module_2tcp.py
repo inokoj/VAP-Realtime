@@ -38,8 +38,8 @@ def test_vap_with_gui():
     
     vap = Vap(
         mode="vap",
-        frame_rate=20,
-        context_len_sec=2.5,
+        frame_rate=10,
+        context_len_sec=5,
         mic1=VapInput.TCPReceiver(ip=TCP_IP1, port=TCP_PORT1),
         mic2=VapInput.TCPReceiver(ip=TCP_IP2, port=TCP_PORT2),
         device="cpu"
@@ -196,8 +196,7 @@ if __name__ == "__main__":
     toolbar = NavigationToolbar2Tk(canvas, root)
     canvas.get_tk_widget().pack()
 
-    thread_vap = threading.Thread(target=test_vap_with_gui)
-    thread_vap.setDaemon(True)
+    thread_vap = threading.Thread(target=test_vap_with_gui, daemon=True)
     thread_vap.start()
 
     tkinter.mainloop() 

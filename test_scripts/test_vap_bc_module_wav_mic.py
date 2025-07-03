@@ -27,7 +27,7 @@ def test_vap_with_gui():
     
     vap = Vap(
         mode="bc",
-        frame_rate=20,
+        frame_rate=10,
         context_len_sec=5,
         mic1=VapInput.Mic(mic_device_index=0),
         mic2=VapInput.Wav(wav_file_path=wav_file_path1),

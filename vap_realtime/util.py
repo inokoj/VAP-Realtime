@@ -1,23 +1,36 @@
 import torch
-import importlib.resources
+from huggingface_hub import hf_hub_download, list_repo_files
 
-def load_vap_model(mode: str, frame_rate: int, context_len_sec: float, device: str = "cuda"):
+repo_id = "username/repo_name"
+
+available_models = [f for f in list_repo_files(repo_id) if f.endswith(".pt")]
+
+def load_vap_model(mode: str, frame_rate: int, context_len_sec: float, language: str = "jp", device: str = "cpu", cache_dir: str = None, force_download: bool = False):
     
     if mode == "vap":
-        package_path = "vap_realtime.data.asset.vap"
-        file_path = f"vap_state_dict_jp_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        if language == "jp":
+            file_path = f"vap_state_dict_jp_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        elif language == "en":
+            file_path = f"vap_state_dict_en_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        else:
+            raise ValueError(f"Invalid language: {language}")
     elif mode == "bc":
-        package_path = "vap_realtime.data.asset.vap_bc"
         file_path = f"vap-bc_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
     elif mode == "nod":
-        package_path = "vap_realtime.data.asset.vap_nod"
         file_path = f"vap-nod_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
     else:
         raise ValueError(f"Invalid mode: {mode}")
     
-    with importlib.resources.path(package_path, file_path) as model_path:
-        sd = torch.load(model_path, map_location=torch.device(device))
+    if file_path not in available_models:
+        raise ValueError(f"Model {file_path} not found in the repository. Available models: {available_models}")
+    
+    sd = hf_hub_download(repo_id=repo_id, filename=file_path, cache_dir=cache_dir, force_download=force_download)
+    
+    sd = torch.load(sd, map_location=torch.device(device))
     return sd
+
+def get_available_models():
+    return available_models
 
 import struct
 
