@@ -24,15 +24,18 @@ TH_S = 0.5
 TH_L = 0.5
 TH_L_P = 0.5
 
+wav_file_path1 = "input/wav_sample/jpn_sumida_16k.wav"
+
+frame_rate = 10
+context_len_sec = 5
+
 def test_vap_with_gui():
     global wav1, wav2, p_nod_short, p_nod_long, p_nod_long_p
 
-    wav_file_path1 = "input/wav_sample/jpn_sumida_16k.wav"
-
     vap = Vap(
         mode="nod",
-        frame_rate=10,
-        context_len_sec=5,
+        frame_rate=frame_rate,
+        context_len_sec=context_len_sec,
         mic1=VapInput.Mic(mic_device_index=0),
         mic2=VapInput.Wav(wav_file_path=wav_file_path1),
         device="cpu"
@@ -64,7 +67,7 @@ if __name__ == "__main__":
 
     SHOWN_CONTEXT_LEN_SEC = 10
     SAMPLE_RATE = 16000
-    SAMPE_VAP_RATE = 10
+    SAMPE_VAP_RATE = frame_rate
 
     MAX_CONTEXT_LEN = SAMPE_VAP_RATE * SHOWN_CONTEXT_LEN_SEC
     MAX_CONTEXT_WAV_LEN = SAMPLE_RATE * SHOWN_CONTEXT_LEN_SEC

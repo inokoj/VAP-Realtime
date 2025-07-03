@@ -3,6 +3,8 @@ import pyaudio
 import queue
 import threading
 import soundfile as sf
+import os
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 import time
 from . import util

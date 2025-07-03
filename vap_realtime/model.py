@@ -5,6 +5,7 @@ import numpy as np
 import threading
 import queue
 import copy
+import os
 
 from .input import Base
 from .util import load_vap_model
@@ -18,10 +19,10 @@ class Vap():
     
     CALC_PROCESS_TIME_INTERVAL = 100
         
-    def __init__(self, mode, frame_rate, context_len_sec, language: str = "jp", mic1: Base = None, mic2: Base = None, num_channels: int = 2, cpc_model: str = "asset/cpc/60k_epoch4-d0f474de.pt", device: str = "cpu", cache_dir: str = None, force_download: bool = False):
+    def __init__(self, mode, frame_rate, context_len_sec, language: str = "jp", mic1: Base = None, mic2: Base = None, num_channels: int = 2, cpc_model: str = os.path.expanduser("~/.cache/cpc/60k_epoch4-d0f474de.pt"), device: str = "cpu", cache_dir: str = None, force_download: bool = False):
         
         conf = VapConfig()
-        if mode == "vap":
+        if mode in ["vap", "vap_MC"]:
             self.vap = VapGPT(conf)
         elif mode == "bc":
             self.vap = VapGPT_bc(conf)

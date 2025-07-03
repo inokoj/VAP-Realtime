@@ -20,6 +20,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from vap_realtime import Vap, VapInput
 
+frame_rate = 10
+context_len_sec = 5
+
 def test_vap_with_gui():
     global wav1, wav2, p_bc_react, p_bc_emo
     
@@ -27,8 +30,8 @@ def test_vap_with_gui():
     
     vap = Vap(
         mode="bc",
-        frame_rate=10,
-        context_len_sec=5,
+        frame_rate=frame_rate,
+        context_len_sec=context_len_sec,
         mic1=VapInput.Mic(mic_device_index=0),
         mic2=VapInput.Wav(wav_file_path=wav_file_path1),
         device="cpu"
@@ -57,7 +60,7 @@ if __name__ == "__main__":
     
     SHOWN_CONTEXT_LEN_SEC = 10
     SAMPLE_RATE = 16000
-    SAMPE_VAP_RATE = 20
+    SAMPE_VAP_RATE = frame_rate
     
     MAX_CONTEXT_LEN = SAMPE_VAP_RATE * SHOWN_CONTEXT_LEN_SEC
     MAX_CONTEXT_WAV_LEN = SAMPLE_RATE * SHOWN_CONTEXT_LEN_SEC

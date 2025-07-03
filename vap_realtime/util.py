@@ -1,35 +1,78 @@
 import torch
 from huggingface_hub import hf_hub_download, list_repo_files
 
-repo_id = "username/repo_name"
-
-available_models = [f for f in list_repo_files(repo_id) if f.endswith(".pt")]
+repo_ids = {
+    "vap_jp": "maai-kyoto/vap_jp",
+    "vap_en": "maai-kyoto/vap_en",
+    "vap_tri": "maai-kyoto/vap_tri",
+    "vap_MC": "maai-kyoto/vap_MC",
+    "vap_bc_jp": "maai-kyoto/vap_bc_jp",
+    # "vap_bc_jp_only_timing": "maai-kyoto/vap_bc_jp_only_timing",
+    "vap_nod_jp": "maai-kyoto/vap_nod_jp",
+    # "vap_nod_jp_only_timing": "maai-kyoto/vap_nod_jp_only_timing",
+}
 
 def load_vap_model(mode: str, frame_rate: int, context_len_sec: float, language: str = "jp", device: str = "cpu", cache_dir: str = None, force_download: bool = False):
     
     if mode == "vap":
         if language == "jp":
+            repo_id = repo_ids["vap_jp"]
             file_path = f"vap_state_dict_jp_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
         elif language == "en":
-            file_path = f"vap_state_dict_en_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+            repo_id = repo_ids["vap_en"]
+            file_path = f"vap_state_dict_eng_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        elif language == "tri":
+            repo_id = repo_ids["vap_tri"]
+            file_path = f"vap_state_dict_tri_ecj_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        else:
+            raise ValueError(f"Invalid language: {language}")
+    elif mode == "vap_MC":
+        if language == "jp":
+            repo_id = repo_ids["vap_MC"]
+            file_path = f"vap_state_dict_jp_{frame_rate}hz_{int(context_len_sec*1000)}msec_MC.pt"
+        elif language == "en":
+            repo_id = repo_ids["vap_MC"]
+            file_path = f"vap_state_dict_en_{frame_rate}hz_{int(context_len_sec*1000)}msec_MC.pt"
+        elif language == "tri":
+            repo_id = repo_ids["vap_MC"]
+            file_path = f"vap_state_dict_tri_{frame_rate}hz_{int(context_len_sec*1000)}msec_MC.pt"
         else:
             raise ValueError(f"Invalid language: {language}")
     elif mode == "bc":
-        file_path = f"vap-bc_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        if language == "jp":
+            repo_id = repo_ids["vap_bc_jp"]
+            file_path = f"vap-bc_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        elif language == "en":
+            repo_id = repo_ids["vap_bc_en"]
+            file_path = f"vap-bc_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        else:
+            raise ValueError(f"Invalid language: {language}")
     elif mode == "nod":
-        file_path = f"vap-nod_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        if language == "jp":
+            repo_id = repo_ids["vap_nod_jp"]
+            file_path = f"vap-nod_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        elif language == "en":
+            repo_id = repo_ids["vap_nod_en"]
+            file_path = f"vap-nod_state_dict_erica_{frame_rate}hz_{int(context_len_sec*1000)}msec.pt"
+        else:
+            raise ValueError(f"Invalid language: {language}")
     else:
         raise ValueError(f"Invalid mode: {mode}")
     
-    if file_path not in available_models:
-        raise ValueError(f"Model {file_path} not found in the repository. Available models: {available_models}")
-    
-    sd = hf_hub_download(repo_id=repo_id, filename=file_path, cache_dir=cache_dir, force_download=force_download)
+    try:
+        sd = hf_hub_download(repo_id=repo_id, filename=file_path, cache_dir=cache_dir, force_download=force_download)
+    except Exception as e:
+        raise ValueError(f"Invalid model: mode: {mode}, frame_rate: {frame_rate}, context_len_sec: {context_len_sec}, language: {language}. Run get_available_models() for available models.")
     
     sd = torch.load(sd, map_location=torch.device(device))
+    
     return sd
 
 def get_available_models():
+    available_models = {}
+    for repo_id in repo_ids.values():
+        files = list_repo_files(repo_id)
+        available_models[repo_id] = [file for file in files if file.endswith(".pt")]
     return available_models
 
 import struct
