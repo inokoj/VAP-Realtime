@@ -1,6 +1,6 @@
 # For VAP main
 torch>=2.2.0
-numpy==1.23.5
+# numpy==1.23.5
 einops==0.7.0
 
 # For Input
