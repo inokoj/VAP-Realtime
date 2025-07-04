@@ -7,7 +7,7 @@ def requirements_from_file(file_name):
 
 setup(
     name="maai",
-    version="0.0.0",
+    version="0.0.1",
     description="Realtime Voice Activity Projection (Realtime-VAP)",
     author="inokoj",
     author_email="inoue.koji.3x@kyoto-u.ac.jp",
