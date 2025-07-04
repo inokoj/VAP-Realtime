@@ -8,7 +8,6 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest  # GitHubのUbuntuランナーを使用
-
     steps:
       - uses: actions/checkout@v3
         # リポジトリをチェックアウトしてGitHub ActionsのVMにコードを取り込む
