@@ -12,9 +12,9 @@ README: <a href="README.md">English </a> | <a href="README_JP.md">Japanese (日�
 </p>
 
 > [!NOTE]
-> このレポジトリのプログラムは、<a href="https://github.com/maai-kyoto/maai">MaAI</a> に統合されました。
+> このリポジトリのプログラムは、<a href="https://github.com/maai-kyoto/maai">MaAI</a> に統合されました。
 >
-> 今後はこちらを参照してください。このレポジトリはそのうちArchiveになります。
+> 今後はこちらを参照してください。このリポジトリはそのうちArchiveになります。
 > 
 > [https://github.com/maai-kyoto/maai](https://github.com/maai-kyoto/maai)
 
