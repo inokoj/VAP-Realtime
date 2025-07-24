@@ -11,6 +11,13 @@ Realtime Voice Activity Projection (Realtime-VAP)
 README: <a href="README.md">English </a> | <a href="README_JP.md">Japanese (日本語) </a>
 </p>
 
+> [!Note]
+> The programs in this repository have been integrated into [MaAI](https://github.com/maai-kyoto/maai).
+>
+> Please refer to that repository going forward. This repository will eventually be archived.
+>
+> [https://github.com/maai-kyoto/maai](https://github.com/maai-kyoto/maai)
+
 A real-time implementation of Voice Activity Projection (VAP) is aimed at controlling behaviors of spoken dialogue systems, such as turn-taking. The VAP model takes stereo audio data (from two dialogue participants) as input and outputs future voice activity (p_now and p_future).
 
 Details about the VAP model can be found in the following repository:
