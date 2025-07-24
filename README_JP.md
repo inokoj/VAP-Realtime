@@ -11,6 +11,13 @@ Realtime Voice Activity Projection (Realtime-VAP)
 README: <a href="README.md">English </a> | <a href="README_JP.md">Japanese (日本語) </a>
 </p>
 
+> [!NOTE]
+> このレポジトリのプログラムは、<a href="https://github.com/maai-kyoto/maai">MaAI</a> に統合されました。
+>
+> 今後はこちらを参照してください。このレポジトリはそのうちArchiveになります。
+> 
+> [https://github.com/maai-kyoto/maai](https://github.com/maai-kyoto/maai)
+
 Voice Activity Projection (VAP)のリアルタイム実装は、音声対話システムのターンテイキングなどへの応用を目的としています。VAP モデルは、ステレオ音声データ（対話参加者の 2 人分）を入力とし、直後の発話予測（p_now および p_future）を出力します。
 
 VAP モデルに関する詳細は、以下のリポジトリでご確認ください。
